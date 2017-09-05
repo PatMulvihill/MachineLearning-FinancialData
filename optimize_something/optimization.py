@@ -13,14 +13,12 @@ import scipy.optimize as spo
 def optimal_allocations(prices):
     columns = len(prices.columns)
     guesses = columns * [1. / columns, ]
-    cons = ({'type': 'eq', 'fun': lambda inputs: 50.0 - np.sum(inputs)})
+    cons = ({'type': 'ineq', 'fun': lambda inputs: 50.0 - np.sum(inputs) })
     bnds = tuple((0, 1) for i in range(columns))
     optimal_allocs = spo.minimize(min_func_vol, guesses, args=(prices,), method='SLSQP', bounds=bnds, constraints=cons, options={'disp':True})
     return optimal_allocs.x
 
 def min_func_vol(allocs, prices):
-    prices.fillna(method='ffill', inplace=True)
-    prices.fillna(method='bfill', inplace=True)
     normalized = prices / prices.ix[0,:]
     allocated = normalized * allocs
     position_values = allocated
