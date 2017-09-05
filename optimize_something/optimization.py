@@ -16,7 +16,7 @@ def optimal_allocations(prices):
     cons = ({'type': 'eq', 'fun': lambda inputs: 50.0 - np.sum(inputs)})
     bnds = tuple((0, 1) for i in range(columns))
     optimal_allocs = spo.minimize(min_func_vol, guesses, args=(prices,), method='SLSQP', bounds=bnds, constraints=cons, options={'disp':True})
-    return optimal_allocs['x']
+    return optimal_allocs.x
 
 def min_func_vol(allocs, prices):
     normalized = prices / prices.ix[0,:]
