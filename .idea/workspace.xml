@@ -28,8 +28,8 @@
       <file leaf-file-name="optimization.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/optimize_something/optimization.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="76" column="62" lean-forward="false" selection-start-line="76" selection-start-column="62" selection-end-line="76" selection-end-column="62" />
+            <state relative-caret-position="236">
+              <caret line="34" column="33" lean-forward="true" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
               <folding>
                 <element signature="e#37#56#0" expanded="true" />
               </folding>
@@ -80,7 +80,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -124,6 +123,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -282,6 +282,32 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/assess_portfolio/analysis.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/optimize_something/optimization.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="46" column="17" lean-forward="false" selection-start-line="46" selection-start-column="17" selection-end-line="46" selection-end-column="17" />
+          <folding>
+            <element signature="e#37#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assess_portfolio/grade_analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assess_portfolio/analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="555">
           <caret line="37" column="41" lean-forward="false" selection-start-line="32" selection-start-column="4" selection-end-line="37" selection-end-column="41" />
           <folding />
@@ -368,8 +394,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/optimize_something/optimization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="76" column="62" lean-forward="false" selection-start-line="76" selection-start-column="62" selection-end-line="76" selection-end-column="62" />
+        <state relative-caret-position="236">
+          <caret line="34" column="33" lean-forward="true" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
           <folding>
             <element signature="e#37#56#0" expanded="true" />
           </folding>

@@ -28,53 +28,20 @@ def find_optimal_allocations(prices):
     guesses = num_columns * [1. / num_columns, ]
     cons = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
     bnds = tuple((0, 1) for x in range(num_columns))
-    opts = spo.minimize(min_func_sharpe, guesses, args=(prices,), method='SLSQP', bounds=bnds, constraints=cons)
+    opts = spo.minimize(min_func_vol, guesses, args=(prices,), method='SLSQP', bounds=bnds, constraints=cons)
     allocs = opts['x']
     return allocs
 
-def min_func_sharpe(allocs, prices):
-    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio = get_portfolio_stats(get_portfolio_value(prices, allocs, 1))
-    return (-1*sharpe_ratio)
+def min_func_vol(allocs, prices):
+    normalized = prices / prices.ix[0,:]
+    allocated = normalized * allocs
+    position_values = allocated
+    port_val = position_values.sum(axis=1)
 
-def get_portfolio_value(prices, allocs, start_val=1):
-    """Compute daily portfolio value given stock prices, allocations and starting value.
-    Parameters
-    ----------
-        prices: daily prices for each stock in portfolio
-        allocs: initial allocations, as fractions that sum to 1
-        start_val: total starting value invested in portfolio (default: 1)
-    Returns
-    -------
-        port_val: daily portfolio value
-    """
-    normed = prices/prices.ix[0,:]
-    alloced = normed * allocs
-    pos_vals = alloced * start_val
-    port_val = pos_vals.sum(axis=1)
-    return port_val
-
-
-def get_portfolio_stats(port_val, daily_rf=0, samples_per_year=252):
-    """Calculate statistics on given portfolio values.
-    Parameters
-    ----------
-        port_val: daily portfolio value
-        daily_rf: daily risk-free rate of return (default: 0%)
-        samples_per_year: frequency of sampling (default: 252 trading days)
-    Returns
-    -------
-        cum_ret: cumulative return
-        avg_daily_ret: average of daily returns
-        std_daily_ret: standard deviation of daily returns
-        sharpe_ratio: annualized Sharpe ratio
-    """
-    daily_ret = (port_val / port_val.shift(1)) - 1
-    cum_ret = (port_val[-1] / port_val[0]) - 1
-    std_daily_ret = daily_ret.std()
-    avg_daily_ret = daily_ret.mean()
-    k = np.sqrt(samples_per_year)
-    sharpe_ratio = k * np.mean(avg_daily_ret - daily_rf) / std_daily_ret
-    return cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio
+    daily_rets = (port_val / port_val.shift(1)) - 1
+    daily_rets = daily_rets[1:]
+    sddr = daily_rets.std()
+    return sddr
 
 
 def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
