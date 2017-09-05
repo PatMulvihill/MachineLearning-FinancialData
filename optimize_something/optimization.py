@@ -24,26 +24,19 @@ def find_optimal_allocations(prices):
     return allocs
 
 def min_func_sharpe(allocs, prices):
-    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio = get_portfolio_stats(get_portfolio_value(prices, allocs, 1))
-    return (-1*sharpe_ratio)
+    normalized = prices / prices.ix[0]
+    allocated = normalized * allocs
+    position_values = allocated
+    port_val = position_values.sum(axis=1)
 
-def get_portfolio_value(prices, allocs, start_val=1):
+    daily_rets = (port_val / port_val.shift(1)) - 1
+    daily_rets = daily_rets[1:]
+    cr = (port_val.ix[-1] / port_val.ix[0]) - 1
+    adr = daily_rets.mean()
+    sddr = daily_rets.std()
+    sr = np.sqrt(252) * (adr - 0) / sddr
+    return (1/sr)
 
-    normed = prices/prices.ix[0,:]
-    alloced = normed * allocs
-    pos_vals = alloced * start_val
-    port_val = pos_vals.sum(axis=1)
-    return port_val
-
-def get_portfolio_stats(port_val, daily_rf=0, samples_per_year=252):
-
-    daily_ret = (port_val / port_val.shift(1)) - 1
-    cum_ret = (port_val[-1] / port_val[0]) - 1
-    std_daily_ret = daily_ret.std()
-    avg_daily_ret = daily_ret.mean()
-    k = np.sqrt(samples_per_year)
-    sharpe_ratio = k * np.mean(avg_daily_ret - daily_rf) / std_daily_ret
-    return cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio
 
 
 def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
