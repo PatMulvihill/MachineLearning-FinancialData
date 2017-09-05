@@ -12,22 +12,10 @@ import scipy.optimize as spo
 # The student must update this code to properly implement the functionality
 
 
-def find_optimal_allocations(prices):
-    """Find optimal allocations for a stock portfolio, optimizing for Sharpe ratio.
-    Parameters
-    ----------
-        prices: daily prices for each stock in portfolio
-    Returns
-    -------
-        allocs: optimal allocations, as fractions that sum to 1.0
-    """
-    #tuple([(0,1)]*10)
-    #constraints = ({ 'type': 'eq', 'fun': lambda inputs: 50.0 - np.sum(inputs) })
-
-    num_columns = len(prices.columns)
-    guesses = num_columns * [1. / num_columns, ]
+def optimal_allocations(prices):
+    guesses = [0.25, 0.25, 0.25, 0.25]
     cons = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
-    bnds = tuple((0, 1) for x in range(num_columns))
+    bnds = ((0.,1.),(0.,1.),(0.,1.),(0.,1.))
     opts = spo.minimize(min_func_vol, guesses, args=(prices,), method='SLSQP', bounds=bnds, constraints=cons)
     allocs = opts['x']
     return allocs
@@ -37,7 +25,6 @@ def min_func_vol(allocs, prices):
     allocated = normalized * allocs
     position_values = allocated
     port_val = position_values.sum(axis=1)
-
     daily_rets = (port_val / port_val.shift(1)) - 1
     daily_rets = daily_rets[1:]
     sddr = daily_rets.std()
@@ -58,7 +45,7 @@ def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
     # find the allocations for the optimal portfolio
     # note that the values here ARE NOT meant to be correct for a test case
     allocs = np.asarray([0.2, 0.2, 0.3, 0.3]) # add code here to find the allocations
-    allocs = find_optimal_allocations(prices)
+    allocs = optimal_allocations(prices)
     allocs = allocs / np.sum(allocs)
 
     # Get daily portfolio value
