@@ -64,8 +64,9 @@ def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
     # Compare daily portfolio value with SPY using a normalized plot
     if gen_plot:
         # add code to plot here
+        prices_SPY = prices_SPY / prices_SPY.ix[0, :]
         df_temp = pd.concat([port_val, prices_SPY], keys=['Portfolio', 'SPY'], axis=1)
-        plot_data(df_temp, title="Daily portfolio value and SPY", ylabel="price", xlabel="Date")
+        plot_data(df_temp, title="Daily portfolio value and SPY", ylabel="Price", xlabel="Date")
 
     return allocs, cr, adr, sddr, sr
 
@@ -78,14 +79,14 @@ def test_code():
     # Note that ALL of these values will be set to different values by
     # the autograder!
 
-    start_date = dt.datetime(2009,1,1)
-    end_date = dt.datetime(2010,1,1)
-    symbols = ['GOOG', 'AAPL', 'GLD', 'XOM', 'IBM']
+    start_date = dt.datetime(2008,6,1)
+    end_date = dt.datetime(2009,6,1)
+    symbols = ['IBM', 'X', 'GLD']
 
     # Assess the portfolio
     allocations, cr, adr, sddr, sr = optimize_portfolio(sd = start_date, ed = end_date,\
         syms = symbols, \
-        gen_plot = False)
+        gen_plot = True)
 
     # Print statistics
     print "Start Date:", start_date
