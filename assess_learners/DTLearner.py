@@ -1,6 +1,6 @@
 import numpy as np
 
-class RTLearner(object):
+class DTLearner(object):
 
     def __init__(self, leaf_size, verbose):
         self.leaf_size = leaf_size
