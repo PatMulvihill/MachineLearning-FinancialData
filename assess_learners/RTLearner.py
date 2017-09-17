@@ -12,6 +12,9 @@ class RTLearner(object):
     def author(self):
         return 'lwang496'
 
+    def addEvidence(self, Xtrain, Ytrain):
+        self.tree = self.build_tree(Xtrain, Ytrain)
+
     def get_split_indices(self, x_train, num_instances):
         split_index = randint(0, x_train.shape[1] - 1)
         split_index1 = randint(0, num_instances - 1)
@@ -48,6 +51,8 @@ class RTLearner(object):
         right_tree = self.build_tree(right_Xtrain, right_Ytrain)
         root = [split_index, split_value, 1, left_tree.shape[0] + 1]
         return np.append(root, left_tree, right_tree)
+
+
 
     def traverse_tree(self, each_test, row):
 
