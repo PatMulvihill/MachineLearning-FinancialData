@@ -26,8 +26,8 @@ class RTLearner(object):
 
         return left_index, right_index, index, split_value
 
-    def build_tree(self, Xtrain, Ytrain):
-
+    
+    def addEvidence(self, Xtrain, Ytrain):
         if Xtrain.shape[0] == 0:
 
             return np.array([-1, -1, -1, -1])
@@ -60,10 +60,8 @@ class RTLearner(object):
         else:
             num_left_side_instances = left_tree.shape[0] + 1
         root = [feature_index, split_val, 1, num_left_side_instances]
-        return np.vstack((root, np.vstack((left_tree, right_tree))))
+        self.tree = np.vstack((root, np.vstack((left_tree, right_tree))))
 
-    def addEvidence(self, Xtrain, Ytrain):
-        self.tree = self.build_tree(Xtrain, Ytrain)
 
     def traverse_tree(self, instance, row=0):
         feature_index = int(self.tree[row][0])
