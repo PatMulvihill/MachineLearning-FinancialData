@@ -8,6 +8,9 @@ class RTLearner(object):
         self.verbose = verbose
         self.tree = np.array([])
 
+    def author(self):
+        return 'lwang496'
+    
     def get_split_indices(self, x_train, num_instances):
         feature_index = randint(0, x_train.shape[1] - 1)
         split_index1 = randint(0, num_instances - 1)
