@@ -54,7 +54,7 @@ class RTLearner(object):
         else:
             num_left= left_tree.shape[0] + 1
         root = [split_index, split_value, 1, num_left]
-        return np.vstack((root, np.vstack((left_tree, right_tree))))
+        return np.vstack(root, left_tree, right_tree)
 
     def addEvidence(self, Xtrain, Ytrain):
         self.tree = self.build_tree(Xtrain, Ytrain)
@@ -69,20 +69,7 @@ class RTLearner(object):
             return self.traverse(each_test, row + int(self.tree[row][3]))
 
     def query(self, Xtest):
-        i = 0
-        sh = Xtest.shape[0]
-        result = np.empty([sh])  # create an empty array
-        while i < sh:
-            arrayIndex = 0
-            
-            while ~np.isnan(self.tree[arrayIndex, 3]):  # checks if the row in "decision tree" array is a leaf
-                val = self.tree[arrayIndex, 1]  # finds the split value
-                if Xtest[i, int(self.tree[
-                                     arrayIndex, 0])] <= val:  # compares the split value of the feature with the value of the same feature in test set
-                    arrayIndex = arrayIndex + 1  # goes to the right ree
-                else:
-                    arrayIndex = arrayIndex + int(self.tree[arrayIndex, 3])  # goes to the left tree
-            value = self.tree[arrayIndex, 1]
-            result[i] = value
-            i = i + 1
-        return result
+        result = []
+        for each_test in Xtest:
+            result.append(self.traverse(each_test))
+        return np.array(result)
