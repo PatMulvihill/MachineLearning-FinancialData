@@ -69,9 +69,9 @@ class RTLearner(object):
         if index == -1:
             return self.tree[row][1]
         if each_test[index] <= self.tree[row][1]:
-            return self.traverse_tree(each_test, row + int(self.tree[row][2]))
+            return self.traverse(each_test, row + int(self.tree[row][2]))
         else:
-            return self.traverse_tree(each_test, row + int(self.tree[row][3]))
+            return self.traverse(each_test, row + int(self.tree[row][3]))
 
     def query(self, Xtest):
         result = []
