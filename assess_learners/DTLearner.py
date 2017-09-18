@@ -60,18 +60,18 @@ class DTLearner(object):
         root = [split_index, split_value, 1, left_tree.shape[0] + 1]
         return np.append(root, left_tree, right_tree)
 
-    def traverse_tree(self, each_test, row):
-
-        if self.tree[row][0] == -1:
+    def traverse_tree(self, instance, row=0):
+        feature_index = int(self.tree[row][0])
+        if feature_index == -1:
             return self.tree[row][1]
-        if each_test[self.tree[row][0]] <= self.tree[row][1]:
-            return self.traverse_tree(each_test, row + int(self.tree[row][2]))
+        if instance[feature_index] <= self.tree[row][1]:
+            return self.traverse_tree(instance, row + int(self.tree[row][2]))
         else:
-            return self.traverse_tree(each_test, row + int(self.tree[row][3]))
+            return self.traverse_tree(instance, row + int(self.tree[row][3]))
 
     def query(self, Xtest):
         result = []
-        for each_test in Xtest:
-            result.append(self.traverse_tree(each_test,0))
+        for instance in Xtest:
+            result.append(self.traverse_tree(instance))
         return np.array(result)
 
