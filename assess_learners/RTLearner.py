@@ -49,8 +49,10 @@ class RTLearner(object):
 
         left_tree = self.build_tree(left_Xtrain, left_Ytrain)
         right_tree = self.build_tree(right_Xtrain, right_Ytrain)
-
-        num_left= left_tree.shape[0] + 1
+        if len(left_tree.shape) == 1:
+            num_left = 2
+        else:
+            num_left= left_tree.shape[0] + 1
         root = [split_index, split_value, 1, num_left]
         return np.vstack((root, np.vstack((left_tree, right_tree))))
 
