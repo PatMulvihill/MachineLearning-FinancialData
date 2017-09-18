@@ -28,20 +28,16 @@ class RTLearner(object):
 
     def build_tree(self, Xtrain, Ytrain):
 
-        if Xtrain.shape[0] == 0:
+        if Xtrain.shape[0] < 1:
+            return np.array([-1, -1, None, None])
 
-            return np.array([-1, -1, -1, -1])
+        if len(np.unique(Ytrain)) == 1:
+            return np.array([-1, Ytrain[0], None, None])
+
         if Xtrain.shape[0] <= self.leaf_size:
+            return np.array([-1, np.mean(Ytrain), None, None])
 
-            return np.array([-1, np.mean(Ytrain), -1, -1])
-
-        values = np.unique(Ytrain)
-        if len(values) == 1:
-
-            return np.array([-1, Ytrain[0], -1, -1])
-
-        left_index, right_index, split_index, split_value = \
-            self.get_indexes(Xtrain, Xtrain.shape[0])
+        left_index, right_index, split_index, split_value = self.get_indexes(Xtrain, Xtrain.shape[0])
 
         while len(left_index) < 1 or len(right_index) < 1:
             left_index, right_index, split_index, split_value = \
