@@ -68,8 +68,21 @@ class RTLearner(object):
         else:
             return self.traverse(each_test, row + int(self.tree[row][3]))
 
+   
+
     def query(self, Xtest):
+        row=0
         result = []
         for each_test in Xtest:
-            result.append(self.traverse(each_test))
-        return np.array(result)
+            while each_test[row][0] >= 0:
+                val = self.tree[row][1]
+                if each_test[row][1] <= val:
+                    row = row + int(self.tree[row][2])
+                else:
+                    row = row + int(self.tree[row][3])
+            result.append(each_test[row][1])
+        return result
+
+
+
+
