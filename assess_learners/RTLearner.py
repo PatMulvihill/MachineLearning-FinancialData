@@ -54,7 +54,7 @@ class RTLearner(object):
         else:
             num_left= left_tree.shape[0] + 1
         root = [split_index, split_value, 1, num_left]
-        return np.vstack(root, left_tree, right_tree)
+        return np.vstack((root, left_tree, right_tree))
 
     def addEvidence(self, Xtrain, Ytrain):
         self.tree = self.build_tree(Xtrain, Ytrain)
