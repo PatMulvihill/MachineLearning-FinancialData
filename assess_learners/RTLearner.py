@@ -11,17 +11,17 @@ class RTLearner(object):
     def author(self):
         return 'lwang496'
 
-    def get_split_indices(self, x_train, num_instances):
-        feature_index = randint(0, x_train.shape[1] - 1)
-        split_index1 = randint(0, num_instances - 1)
-        split_index2 = randint(0, num_instances - 1)
-        split_val = (x_train[split_index1][feature_index]
-                     + x_train[split_index2][feature_index]) / 2
+    def get_indexes(self, x_train):
+        index = randint(0, x_train.shape[1] - 1)
+        split_index1 = randint(0, x_train.shape[0] - 1)
+        split_index2 = randint(0, x_train.shape[0] - 1)
+        split_val = (x_train[split_index1][index]
+                     + x_train[split_index2][index]) / 2
         left_indices = [i for i in xrange(x_train.shape[0])
-                        if x_train[i][feature_index] <= split_val]
+                        if x_train[i][index] <= split_val]
         right_indices = [i for i in xrange(x_train.shape[0])
-                         if x_train[i][feature_index] > split_val]
-        return left_indices, right_indices, feature_index, split_val
+                         if x_train[i][index] > split_val]
+        return left_indices, right_indices, index, split_val
 
     def build_tree(self, x_train, y_train):
         num_instances = x_train.shape[0]
@@ -39,11 +39,11 @@ class RTLearner(object):
 
         # Choose a random feature, and a random split value
         left_indices, right_indices, feature_index, split_val = \
-            self.get_split_indices(x_train, num_instances)
+            self.get_indexes(x_train)
 
         while len(left_indices) < 1 or len(right_indices) < 1:
             left_indices, right_indices, feature_index, split_val = \
-                self.get_split_indices(x_train, num_instances)
+                self.get_indexes(x_train, num_instances)
 
         left_x_train = np.array([x_train[i] for i in left_indices])
         left_y_train = np.array([y_train[i] for i in left_indices])

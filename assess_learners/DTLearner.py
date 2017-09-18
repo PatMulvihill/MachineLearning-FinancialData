@@ -18,7 +18,7 @@ class DTLearner(object):
         split_index = -1;
         max_correlation = 0
         for i in range(Xtrain.shape[0]):
-            corr = np.corrcoef(Xtrain[:,i], Ytrain[0])
+            corr = np.corrcoef(Xtrain[:,i], Ytrain)
             corelation.append(corr)
             if max_correlation <= abs(corr):
                 max_correlation = abs(corr)
@@ -33,7 +33,6 @@ class DTLearner(object):
         return left_index, right_index, split_index, split_value
 
     def build_tree(self, x_train, y_train):
-
         num_instances = x_train.shape[0]
         if num_instances == 0:
             print 'all -1s'
@@ -51,7 +50,9 @@ class DTLearner(object):
         left_indices, right_indices, feature_index, split_val = \
             self.get_split_indices(x_train, num_instances)
 
-
+        while len(left_indices) < 1 or len(right_indices) < 1:
+            left_indices, right_indices, feature_index, split_val = \
+                self.get_split_indices(x_train, num_instances)
 
         left_x_train = np.array([x_train[i] for i in left_indices])
         left_y_train = np.array([y_train[i] for i in left_indices])
@@ -66,6 +67,8 @@ class DTLearner(object):
             num_left_side_instances = left_tree.shape[0] + 1
         root = [feature_index, split_val, 1, num_left_side_instances]
         return np.vstack((root, np.vstack((left_tree, right_tree))))
+
+
 
     def traverse_tree(self, instance, row=0):
         feature_index = int(self.tree[row][0])
