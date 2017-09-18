@@ -13,7 +13,7 @@ class DTLearner(object):
     def addEvidence(self, Xtrain, Ytrain):
         self.tree = self.build_tree(Xtrain, Ytrain)
 
-    def get_indexes(self, Xtrain, Ytrain):
+    def get_split_indices(self, Xtrain, Ytrain):
         corelation = []
         split_index = -1;
         max_correlation = 0
