@@ -13,47 +13,45 @@ class RTLearner(object):
 
     def get_indexes(self, x_train, num_instances):
         index = randint(0, x_train.shape[1] - 1)
-        split_index1 = randint(0, num_instances - 1)
-        split_index2 = randint(0, num_instances - 1)
-        split_val = (x_train[split_index1][index]
-                     + x_train[split_index2][index]) / 2
-        left_indices = []
-        right_indices = []
+        index1 = randint(0, num_instances - 1)
+        index2 = randint(0, num_instances - 1)
+        split_value = (x_train[index1][index] + x_train[index2][index]) / 2
+        left_index = []
+        right_index = []
         for i in xrange(x_train.shape[0]):
-            if x_train[i][index] <= split_val:
-                left_indices.append(i)
+            if x_train[i][index] <= split_value:
+                left_index.append(i)
             else:
-                right_indices.append(i)
+                right_index.append(i)
 
+        return left_index, right_index, index, split_value
 
-        return left_indices, right_indices, index, split_val
+    def build_tree(self, Xtrain, Ytrain):
 
-    def build_tree(self, x_train, y_train):
-        num_instances = x_train.shape[0]
-        if num_instances == 0:
-            print 'all -1s'
+        if Xtrain.shape[0] == 0:
+
             return np.array([-1, -1, -1, -1])
-        if num_instances <= self.leaf_size:
-            # If there's only one instance, take the mean of the labels
-            return np.array([-1, np.mean(y_train), -1, -1])
+        if Xtrain.shape[0] <= self.leaf_size:
 
-        values = np.unique(y_train)
+            return np.array([-1, np.mean(Ytrain), -1, -1])
+
+        values = np.unique(Ytrain)
         if len(values) == 1:
-            # If all instances have the same label, return that label
-            return np.array([-1, y_train[0], -1, -1])
+
+            return np.array([-1, Ytrain[0], -1, -1])
 
         # Choose a random feature, and a random split value
         left_indices, right_indices, feature_index, split_val = \
-            self.get_indexes(x_train, num_instances)
+            self.get_indexes(Xtrain, Xtrain.shape[0])
 
         while len(left_indices) < 1 or len(right_indices) < 1:
             left_indices, right_indices, feature_index, split_val = \
-                self.get_indexes(x_train, num_instances)
+                self.get_indexes(Xtrain, Xtrain.shape[0])
 
-        left_x_train = np.array([x_train[i] for i in left_indices])
-        left_y_train = np.array([y_train[i] for i in left_indices])
-        right_x_train = np.array([x_train[i] for i in right_indices])
-        right_y_train = np.array([y_train[i] for i in right_indices])
+        left_x_train = np.array([Xtrain[i] for i in left_indices])
+        left_y_train = np.array([Ytrain[i] for i in left_indices])
+        right_x_train = np.array([Xtrain[i] for i in right_indices])
+        right_y_train = np.array([Ytrain[i] for i in right_indices])
 
         left_tree = self.build_tree(left_x_train, left_y_train)
         right_tree = self.build_tree(right_x_train, right_y_train)
