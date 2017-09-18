@@ -37,23 +37,20 @@ class RTLearner(object):
         if Xtrain.shape[0] <= self.leaf_size:
             return np.array([-1, np.mean(Ytrain), None, None])
 
-        left_index, right_index, split_index, split_value = self.get_indexes(Xtrain, Xtrain.shape[0])
+        left_index, right_index, split_index, split_value = [],[],[],[]
 
         while len(left_index) < 1 or len(right_index) < 1:
-            left_index, right_index, split_index, split_value = \
-                self.get_indexes(Xtrain, Xtrain.shape[0])
+            left_index, right_index, split_index, split_value = self.get_indexes(Xtrain, Xtrain.shape[0])
 
         left_Xtrain = np.array([Xtrain[i] for i in left_index])
-        left_Ytrain = np.array([Ytrain[i] for i in left_index])
         right_Xtrain = np.array([Xtrain[i] for i in right_index])
+        left_Ytrain = np.array([Ytrain[i] for i in left_index])
         right_Ytrain = np.array([Ytrain[i] for i in right_index])
 
         left_tree = self.build_tree(left_Xtrain, left_Ytrain)
         right_tree = self.build_tree(right_Xtrain, right_Ytrain)
-        if len(left_tree.shape) == 1:
-            num_left = 2
-        else:
-            num_left= left_tree.shape[0] + 1
+
+        num_left= left_tree.shape[0] + 1
         root = [split_index, split_value, 1, num_left]
         return np.vstack((root, np.vstack((left_tree, right_tree))))
 
