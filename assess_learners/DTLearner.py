@@ -24,14 +24,11 @@ class DTLearner(object):
                 max_correlation = abs(corr)
                 split_index = i
 
-        split_value = Xtrain[:,i].median()
-        left_index = []
-        right_index = []
-        for i in range(Xtrain.shape[0]):
-            if Xtrain[i][split_index] <= split_value:
-                left_index.append(i)
-            else:
-                right_index.append(i)
+        split_value = Xtrain[:,split_index].median()
+        left_index = [i for i in xrange(Xtrain.shape[0])
+                        if Xtrain[i][split_index] <= split_value]
+        right_index = [i for i in xrange(Xtrain.shape[0])
+                         if Xtrain[i][split_index] > split_value]
 
         return left_index, right_index, split_index, split_value
 
