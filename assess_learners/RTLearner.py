@@ -15,7 +15,7 @@ class RTLearner(object):
     def addEvidence(self, Xtrain, Ytrain):
         self.tree = self.build_tree(Xtrain, Ytrain)
 
-    def get_split_indices(self, x_train, num_instances):
+    def get_indexes(self, x_train, num_instances):
         split_index = randint(0, x_train.shape[1] - 1)
         split_index1 = randint(0, num_instances - 1)
         split_index2 = randint(0, num_instances - 1)
