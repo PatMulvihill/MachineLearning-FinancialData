@@ -11,16 +11,21 @@ class RTLearner(object):
     def author(self):
         return 'lwang496'
 
-    def get_indexes(self, x_train):
+    def get_indexes(self, x_train, num_instances):
         index = randint(0, x_train.shape[1] - 1)
-        split_index1 = randint(0, x_train.shape[0] - 1)
-        split_index2 = randint(0, x_train.shape[0] - 1)
+        split_index1 = randint(0, num_instances - 1)
+        split_index2 = randint(0, num_instances - 1)
         split_val = (x_train[split_index1][index]
                      + x_train[split_index2][index]) / 2
-        left_indices = [i for i in xrange(x_train.shape[0])
-                        if x_train[i][index] <= split_val]
-        right_indices = [i for i in xrange(x_train.shape[0])
-                         if x_train[i][index] > split_val]
+        left_indices = []
+        right_indices = []
+        for i in xrange(x_train.shape[0]):
+            if x_train[i][index] <= split_val:
+                left_indices.append(i)
+            else:
+                right_indices.append(i)
+
+
         return left_indices, right_indices, index, split_val
 
     def build_tree(self, x_train, y_train):
@@ -39,7 +44,7 @@ class RTLearner(object):
 
         # Choose a random feature, and a random split value
         left_indices, right_indices, feature_index, split_val = \
-            self.get_indexes(x_train)
+            self.get_indexes(x_train, num_instances)
 
         while len(left_indices) < 1 or len(right_indices) < 1:
             left_indices, right_indices, feature_index, split_val = \
