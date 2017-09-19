@@ -15,12 +15,10 @@ class BagLearner(object):
 
     def addEvidence(self,Xtrain,Ytrain):
         # Randomly select the set of data
-        index = []
-        for i in range(self.bags):
-            index.append[np.random.random_integers(0, Xtrain.shape[0] - 1, Xtrain.shape[0])]
 
-        self.bags_x = [Xtrain[index[i]] for i in range(self.bags)]
-        self.bags_y = [Ytrain[index[j]] for j in range(self.bags)]
+        index = [np.random.random_integers(0, Xtrain.shape[0] - 1) for i in range(self.bags)]
+        self.Xbags = [Xtrain[index[i]] for i in range(self.bags)]
+        self.Ybags = [Ytrain[index[j]] for j in range(self.bags)]
 
     def query(self,Xtest):
 
@@ -31,7 +29,7 @@ class BagLearner(object):
             learners.append(self.learner(**self.kwargs))
 
         for j in range(len(learners)):
-            learners[j].addEvidence(self.bags_x[j],self.bags_y[j])
+            learners[j].addEvidence(self.Xbags[j],self.Ybags[j])
             result[j] = learners[j].query(Xtest)
 
         if self.verbose:
