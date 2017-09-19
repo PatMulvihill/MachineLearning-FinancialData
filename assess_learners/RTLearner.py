@@ -75,13 +75,15 @@ class RTLearner(object):
         result = []
         for each_test in Xtest:
             row = 0
-            while self.tree[row][1] >= 0:
+            i = int(self.tree[row][0])
+            while i >= 0:
                 val = self.tree[row][1]
-                if each_test[0][1] <= val:
+                if each_test[i] <= val:
                     row = row + int(self.tree[row][2])
                 else:
                     row = row + int(self.tree[row][3])
-            result.append(each_test[0][1])
+                i = int(self.tree[row][0])
+            result.append(self.tree[row][1])
         return result
 
 
