@@ -21,20 +21,19 @@ class BagLearner(object):
 
     def query(self,Xtest):
 
+        result = np.zeros((len(self.bags_x),len(Xtest),))
         learners = []
-        bag_res = np.zeros((len(self.bags_x),len(Xtest),))
-
-        self.Xtest = Xtest
 
         for i in range(0,self.bags):
             learners.append(self.learner(**self.kwargs))
 
         for j in range(0,len(learners)):
             learners[j].addEvidence(self.bags_x[j],self.bags_y[j])
-            bag_res[j] = learners[j].query(self.Xtest)
+            result[j] = learners[j].query(Xtest)
 
-        return np.mean(bag_res, axis=0)
+        if self.verbose:
+            print np.mean(result, axis=0)
+
+        return np.mean(result, axis=0)
 
 
-if __name__=="__main__":
-    print "BagLearner"
