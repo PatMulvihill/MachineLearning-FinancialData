@@ -1,42 +1,24 @@
 import numpy as np
-import BagLearner as Bag
+import BagLearner as bag
+import LinRegLearner as lrl
 from random import randint
 
 class InsaneLearner(object):
 
+
     def __init__(self, verbose):
-        self.learner = Bag.learner
-        self.kwargs = Bag.kwargs
-        self.bags = Bag.bags
-        self.boost = Bag.boost
+
         self.verbose = verbose
 
     def author(self):
         return 'lwang496'
 
-    def addEvidence(self,Xtrain,Ytrain):
-        # Randomly select the set of data
-        index = []
-        for i in range(self.bags):
-            index.append(np.random.random_integers(0, Xtrain.shape[0] - 1, Xtrain.shape[0]))
-
-        self.Xbags = []
-        self.Ybags = []
-        for i in range(self.bags):
-            self.Xbags.append(Xtrain[index[i]])
-            self.Ybags.append(Ytrain[index[i]])
 
     def query(self,Xtest):
+        learner = bag.BagLearner(learner=lrl.LinRegLearner, kwargs={}, bags=20, boost=False, verbose=False)
 
-        result = []
-        learners = []
+        result = learner.query(Xtest)
 
-        for i in range(0,self.bags):
-            learners.append(self.learner(**self.kwargs))
-
-        for i in range(0,len(learners)):
-            learners[i].addEvidence(self.Xbags[i],self.Ybags[i])
-            result.append(learners[i].query(Xtest))
 
         if self.verbose:
             print np.mean(np.array(result), axis=0)
