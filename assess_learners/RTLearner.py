@@ -43,14 +43,13 @@ class RTLearner(object):
         while len(left_index) < 1 or len(right_index) < 1:
             left_index, right_index, split_index, split_value = self.get_indexes(Xtrain)
 
-        left_Xtrain = np.array([Xtrain[i] for i in left_index])
-        right_Xtrain = np.array([Xtrain[i] for i in right_index])
-        left_Ytrain = np.array([Ytrain[i] for i in left_index])
-        right_Ytrain = np.array([Ytrain[i] for i in right_index])
-
-        left_tree = self.build_tree(left_Xtrain, left_Ytrain)
-        right_tree = self.build_tree(right_Xtrain, right_Ytrain)
-        root = [split_index, split_value, 1, left_tree.shape[0] + 1]
+        left_tree = self.build_tree(np.array([Xtrain[i] for i in left_index]), np.array([Ytrain[i] for i in left_index]))
+        right_tree = self.build_tree(np.array([Xtrain[i] for i in right_index]), np.array([Ytrain[i] for i in right_index]))
+        
+        if len(left_tree.shape) == 1:
+            root = [split_index, split_value, 1, 2]
+        else:
+            root = [split_index, split_value, 1, left_tree.shape[0] + 1]
         return np.vstack((root, left_tree, right_tree))
 
     def addEvidence(self, Xtrain, Ytrain):
