@@ -19,9 +19,13 @@ class BagLearner(object):
         index = []
         for i in range(self.bags):
             index.append(np.random.random_integers(0, Xtrain.shape[0] - 1, Xtrain.shape[0]))
-        self.Xbags = [Xtrain[index[i]] for i in range(self.bags)]
-        self.Ybags = [Ytrain[index[j]] for j in range(self.bags)]
 
+        self.Xbags = []
+        self.Ybags = []
+        for i in range(self.bags):
+            self.Xbags.append(Xtrain[index[i]])
+            self.Ybags.append(Ytrain[index[i]])
+        
     def query(self,Xtest):
 
         result = []
