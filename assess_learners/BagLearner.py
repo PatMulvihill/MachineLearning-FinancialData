@@ -15,26 +15,25 @@ class BagLearner(object):
 
     def addEvidence(self,Xtrain,Ytrain):
         # Randomly select the set of data
-
-        index = [np.random.random_integers(0, Xtrain.shape[0] - 1) for i in range(self.bags)]
+        index = [np.random.random_integers(0, Xtrain.shape[0] - 1, Xtrain.shape[0]) for i in range(self.bags)]
         self.Xbags = [Xtrain[index[i]] for i in range(self.bags)]
         self.Ybags = [Ytrain[index[j]] for j in range(self.bags)]
 
     def query(self,Xtest):
 
-        result = np.zeros((len(self.bags_x),len(Xtest),))
+        result = []
         learners = []
 
-        for i in range(self.bags):
+        for i in range(0,self.bags):
             learners.append(self.learner(**self.kwargs))
 
-        for j in range(len(learners)):
-            learners[j].addEvidence(self.Xbags[j],self.Ybags[j])
-            result[j] = learners[j].query(Xtest)
+        for i in range(0,len(learners)):
+            learners[i].addEvidence(self.Xbags[i],self.Ybags[i])
+            result.append(learners[i].query(Xtest))
 
         if self.verbose:
-            print np.mean(result, axis=0)
+            print np.mean(np.array(result), axis=0)
 
-        return np.mean(result, axis=0)
+        return np.mean(np.array(result), axis=0)
 
 
