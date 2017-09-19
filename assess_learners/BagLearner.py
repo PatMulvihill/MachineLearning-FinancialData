@@ -25,7 +25,7 @@ class BagLearner(object):
         for i in range(self.bags):
             self.Xbags.append(Xtrain[index[i]])
             self.Ybags.append(Ytrain[index[i]])
-        
+
     def query(self,Xtest):
 
         result = []

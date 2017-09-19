@@ -14,12 +14,12 @@ class DTLearner(object):
         self.tree = self.build_tree(Xtrain, Ytrain)
 
     def get_indexes(self, Xtrain, Ytrain):
-        corelation = []
+
         index = -1;
         max_correlation = 0
         for i in range(Xtrain.shape[0]):
-            corr = np.corrcoef(Xtrain[:,i], Ytrain)
-            corelation.append(corr)
+            corr = np.corrcoef(Xtrain[:,i], Ytrain,rowvar=False)
+            corr = corr[0][1]
             if max_correlation <= abs(corr):
                 max_correlation = abs(corr)
                 index = i
@@ -46,10 +46,7 @@ class DTLearner(object):
         if Xtrain.shape[0] <= self.leaf_size:
             return np.array([-1, np.mean(Ytrain), None, None])
 
-        left_index, right_index, split_index, split_value = [],[],[],[]
-
-        while len(left_index) < 1 or len(right_index) < 1:
-            left_index, right_index, split_index, split_value = self.get_indexes(Xtrain)
+        left_index, right_index, split_index, split_value = self.get_indexes(Xtrain, Ytrain)
 
         left_tree = self.build_tree(np.array([Xtrain[i] for i in left_index]), np.array([Ytrain[i] for i in left_index]))
         right_tree = self.build_tree(np.array([Xtrain[i] for i in right_index]), np.array([Ytrain[i] for i in right_index]))
