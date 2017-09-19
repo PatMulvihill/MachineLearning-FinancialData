@@ -17,11 +17,8 @@ class BagLearner(object):
     def addEvidence(self,Xtrain,Ytrain):
         # Randomly select the set of data
 
-        index = []
-        for i in range(self.bags):
-            index.append(randint(0, Xtrain.shape[0] - 1))
-        self.Xbags = [Xtrain[index[i]] for i in range(self.bags)]
-        self.Ybags = [Ytrain[index[j]] for j in range(self.bags)]
+        self.Xbags = [Xtrain[randint(0, Xtrain.shape[0] - 1)] for i in range(self.bags)]
+        self.Ybags = [Ytrain[randint(0, Xtrain.shape[0] - 1)] for j in range(self.bags)]
 
     def query(self,Xtest):
 
