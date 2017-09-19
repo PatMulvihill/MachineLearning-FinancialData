@@ -12,6 +12,7 @@ class RTLearner(object):
         return 'lwang496'
 
     def get_indexes(self, Xtrain):
+        # get the index for the left tree, right tree, get split index and split value
         index = randint(0, Xtrain.shape[1] - 1)
         index1 = randint(0, Xtrain.shape[0] - 1)
         index2 = randint(0, Xtrain.shape[0] - 1)
@@ -50,10 +51,9 @@ class RTLearner(object):
         left_tree = self.build_tree(left_Xtrain, left_Ytrain)
         right_tree = self.build_tree(right_Xtrain, right_Ytrain)
         if len(left_tree.shape) == 1:
-            num_left = 2
+            root = [split_index, split_value, 1, 2]
         else:
-            num_left= left_tree.shape[0] + 1
-        root = [split_index, split_value, 1, num_left]
+            root = [split_index, split_value, 1, left_tree.shape[0] + 1]
         return np.vstack((root, left_tree, right_tree))
 
     def addEvidence(self, Xtrain, Ytrain):
