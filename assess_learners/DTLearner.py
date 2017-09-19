@@ -24,7 +24,7 @@ class DTLearner(object):
                 max_correlation = abs(corr)
                 index = i
 
-        split_value = Xtrain[:,index].median()
+        split_value = np.median(Xtrain[:,index])
         left_index=[]
         right_index=[]
         for i in xrange(Xtrain.shape[0]):
