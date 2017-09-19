@@ -13,6 +13,10 @@ class InsaneLearner(object):
     def author(self):
         return 'lwang496'
 
+    def addEvidence(self, Xtrain, Ytrain):
+        learner = bag.BagLearner(learner=lrl.LinRegLearner, kwargs={}, bags=20, boost=False, verbose=False)
+        learner.addEvidence(Xtrain, Ytrain)
+
 
     def query(self,Xtest):
         learner = bag.BagLearner(learner=lrl.LinRegLearner, kwargs={}, bags=20, boost=False, verbose=False)
