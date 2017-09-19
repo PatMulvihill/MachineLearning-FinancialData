@@ -1,5 +1,6 @@
 import numpy as np
 import LinRegLearner as lrl
+from random import randint
 
 class BagLearner(object):
 
@@ -15,7 +16,10 @@ class BagLearner(object):
 
     def addEvidence(self,Xtrain,Ytrain):
         # Randomly select the set of data
-        index = [np.random.random_integers(0, Xtrain.shape[0] - 1, Xtrain.shape[0]) for i in range(self.bags)]
+
+        index = []
+        for i in range(self.bags):
+            index.append(randint(0, Xtrain.shape[0] - 1))
         self.Xbags = [Xtrain[index[i]] for i in range(self.bags)]
         self.Ybags = [Ytrain[index[j]] for j in range(self.bags)]
 
