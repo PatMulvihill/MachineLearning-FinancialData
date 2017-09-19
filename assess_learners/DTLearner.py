@@ -17,7 +17,7 @@ class DTLearner(object):
 
         index = -1;
         max_correlation = 0
-        for i in range(Xtrain.shape[0]):
+        for i in range(Xtrain.shape[1]):
             corr = np.corrcoef(Xtrain[:,i], Ytrain,rowvar=False)
             corr = corr[0][1]
             if max_correlation <= abs(corr):
