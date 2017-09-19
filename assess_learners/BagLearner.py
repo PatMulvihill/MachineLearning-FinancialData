@@ -10,6 +10,8 @@ class BagLearner(object):
         self.bags = bags
         self.boost = boost
         self.verbose = verbose
+        self.Xbags = []
+        self.Ybags = []
 
     def author(self):
         return 'lwang496'
@@ -20,8 +22,7 @@ class BagLearner(object):
         for i in range(self.bags):
             index.append(np.random.random_integers(0, Xtrain.shape[0] - 1, Xtrain.shape[0]))
 
-        self.Xbags = []
-        self.Ybags = []
+
         for i in range(self.bags):
             self.Xbags.append(Xtrain[index[i]])
             self.Ybags.append(Ytrain[index[i]])
