@@ -45,7 +45,7 @@ class RTLearner(object):
 
         left_tree = self.build_tree(np.array([Xtrain[i] for i in left_index]), np.array([Ytrain[i] for i in left_index]))
         right_tree = self.build_tree(np.array([Xtrain[i] for i in right_index]), np.array([Ytrain[i] for i in right_index]))
-        
+
         if len(left_tree.shape) == 1:
             root = [split_index, split_value, 1, 2]
         else:
