@@ -22,7 +22,6 @@ class BagLearner(object):
         for i in range(self.bags):
             index.append(np.random.random_integers(0, Xtrain.shape[0] - 1, Xtrain.shape[0]))
 
-
         for i in range(self.bags):
             self.Xbags.append(Xtrain[index[i]])
             self.Ybags.append(Ytrain[index[i]])

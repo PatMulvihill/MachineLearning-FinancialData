@@ -9,19 +9,20 @@ class InsaneLearner(object):
     def __init__(self, verbose):
 
         self.verbose = verbose
+        self.learner = bag.BagLearner(learner=lrl.LinRegLearner, kwargs={}, bags=20, boost=False, verbose=False)
 
     def author(self):
         return 'lwang496'
 
     def addEvidence(self, Xtrain, Ytrain):
-        learner = bag.BagLearner(learner=lrl.LinRegLearner, kwargs={}, bags=20, boost=False, verbose=False)
-        learner.addEvidence(Xtrain, Ytrain)
+
+        self.learner.addEvidence(Xtrain, Ytrain)
 
 
     def query(self,Xtest):
-        learner = bag.BagLearner(learner=lrl.LinRegLearner, kwargs={}, bags=20, boost=False, verbose=False)
 
-        result = learner.query(Xtest)
+
+        result = self.learner.query(Xtest)
 
 
         if self.verbose:
