@@ -48,6 +48,10 @@ class DTLearner(object):
 
         left_index, right_index, split_index, split_value = self.get_indexes(Xtrain, Ytrain)
 
+        if len(left_index) == 0 or len(left_index) == Xtrain.shape[0]:
+            return np.array([-1, np.mean(Ytrain), None, None])
+
+
         left_tree = self.build_tree(np.array([Xtrain[i] for i in left_index]), np.array([Ytrain[i] for i in left_index]))
         right_tree = self.build_tree(np.array([Xtrain[i] for i in right_index]), np.array([Ytrain[i] for i in right_index]))
 
