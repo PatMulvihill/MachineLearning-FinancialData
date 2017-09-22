@@ -34,7 +34,7 @@ if __name__=="__main__":
     xlist = []
     ylist = []
     for i in range(0, 30):
-        learner = rt.RTLearner(i, verbose=False)
+        learner = dt.DTLearner(i, verbose=False)
         learner.addEvidence(trainX, trainY)
         predY = learner.query(testX)  # get the predictions
         rmse = math.sqrt(((testY - predY) ** 2).sum() / testY.shape[0])
@@ -46,7 +46,7 @@ if __name__=="__main__":
 
 
         # create a learner and train it
-    learner = rt.RTLearner(2, verbose=False)
+    learner = dt.DTLearner(2, verbose=False)
     learner.addEvidence(trainX, trainY) # train it
     print learner.author()
 

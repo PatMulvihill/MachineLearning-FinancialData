@@ -49,7 +49,7 @@ class DTLearner(object):
         if Xtrain.shape[0] <= self.leaf_size:
             return np.array([-1, np.mean(Ytrain), None, None])
 
-        all_indexes = self.get_indexes(Xtrain)
+        all_indexes = self.get_indexes(Xtrain, Ytrain)
         left_index, right_index, split_index, split_value = all_indexes[0], all_indexes[1], all_indexes[2], all_indexes[3]
 
         if len(left_index) == 0 or len(left_index) == Xtrain.shape[0]:
