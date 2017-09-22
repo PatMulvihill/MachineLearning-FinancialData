@@ -14,7 +14,7 @@ class DTLearner(object):
         self.tree = self.build_tree(Xtrain, Ytrain)
 
     def get_indexes(self, Xtrain, Ytrain):
-
+        all_index = []
         index = -1;
         max_correlation = 0
         for i in range(Xtrain.shape[1]):
@@ -32,8 +32,11 @@ class DTLearner(object):
                 left_index.append(i)
             else:
                 right_index.append(i)
-
-        return left_index, right_index, index, split_value
+        all_index.append(left_index)
+        all_index.append(right_index)
+        all_index.append(index)
+        all_index.append(split_value)
+        return all_index
 
     def build_tree(self, Xtrain, Ytrain):
         # builder the tree based on the Xtrain and Ytrain
@@ -46,11 +49,11 @@ class DTLearner(object):
         if Xtrain.shape[0] <= self.leaf_size:
             return np.array([-1, np.mean(Ytrain), None, None])
 
-        left_index, right_index, split_index, split_value = self.get_indexes(Xtrain, Ytrain)
+        all_indexes = self.get_indexes(Xtrain)
+        left_index, right_index, split_index, split_value = all_indexes[0], all_indexes[1], all_indexes[2], all_indexes[3]
 
         if len(left_index) == 0 or len(left_index) == Xtrain.shape[0]:
             return np.array([-1, np.mean(Ytrain), None, None])
-
 
         left_tree = self.build_tree(np.array([Xtrain[i] for i in left_index]), np.array([Ytrain[i] for i in left_index]))
         right_tree = self.build_tree(np.array([Xtrain[i] for i in right_index]), np.array([Ytrain[i] for i in right_index]))
