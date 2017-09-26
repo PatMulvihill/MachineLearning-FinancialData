@@ -37,7 +37,7 @@ if __name__=="__main__":
 
     # create a learner and train it
     print "start time "+ str(datetime.datetime.now())
-    learner = bag.BagLearner(learner=RT.RTLearner, kwargs={"leaf_size":20, "verbose" : False}, bags=20, boost=False, verbose=False) # create a LinRegLearner
+    learner = bag.BagLearner(learner=DT.DTLearner, kwargs={"leaf_size":20, "verbose" : False}, bags=20, boost=False, verbose=False) # create a LinRegLearner
     learner.addEvidence(trainX, trainY) # train it
     print learner.author()
 

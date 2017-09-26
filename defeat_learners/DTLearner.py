@@ -1,41 +1,85 @@
-"""
-A simple wrapper for linear regression.  (c) 2015 Tucker Balch
-Note, this is NOT a correct DTLearner; Replace with your own implementation.
-"""
-
 import numpy as np
-import warnings
 
 class DTLearner(object):
 
-    def __init__(self, leaf_size=1, verbose = False):
-        warnings.warn("\n\n  WARNING! THIS IS NOT A CORRECT DTLearner IMPLEMENTATION! REPLACE WITH YOUR OWN CODE\n")
-        pass # move along, these aren't the drones you're looking for
+    def __init__(self, leaf_size, verbose):
+        self.leaf_size = leaf_size
+        self.verbose = verbose
+        self.tree = np.array([])
 
     def author(self):
-        return 'tb34' # replace tb34 with your Georgia Tech username
+        return 'lwang496'
 
-    def addEvidence(self,dataX,dataY):
-        """
-        @summary: Add training data to learner
-        @param dataX: X values of data to add
-        @param dataY: the Y training values
-        """
+    def addEvidence(self, Xtrain, Ytrain):
+        self.tree = self.build_tree(Xtrain, Ytrain)
 
-        # slap on 1s column so linear regression finds a constant term
-        newdataX = np.ones([dataX.shape[0],dataX.shape[1]+1])
-        newdataX[:,0:dataX.shape[1]]=dataX
+    def get_indexes(self, Xtrain, Ytrain):
+        all_index = []
+        index = -1;
+        max_correlation = 0
+        for i in range(Xtrain.shape[1]):
+            corr = np.corrcoef(Xtrain[:,i], Ytrain,rowvar=False)
+            corr = corr[0][1]
+            if max_correlation <= abs(corr):
+                max_correlation = abs(corr)
+                index = i
 
-        # build and save the model
-        self.model_coefs, residuals, rank, s = np.linalg.lstsq(newdataX, dataY)
-        
-    def query(self,points):
-        """
-        @summary: Estimate a set of test points given the model we built.
-        @param points: should be a numpy array with each row corresponding to a specific query.
-        @returns the estimated values according to the saved model.
-        """
-        return (self.model_coefs[:-1] * points).sum(axis = 1) + self.model_coefs[-1]
+        split_value = np.median(Xtrain[:,index])
+        left_index=[]
+        right_index=[]
+        for i in xrange(Xtrain.shape[0]):
+            if Xtrain[i][index] <= split_value:
+                left_index.append(i)
+            else:
+                right_index.append(i)
+        all_index.append(left_index)
+        all_index.append(right_index)
+        all_index.append(index)
+        all_index.append(split_value)
+        return all_index
 
-if __name__=="__main__":
-    print "the secret clue is 'zzyzx'"
+    def build_tree(self, Xtrain, Ytrain):
+        # builder the tree based on the Xtrain and Ytrain
+        if Xtrain.shape[0] < 1:
+            return np.array([-1, -1, None, None])
+
+        if len(np.unique(Ytrain)) == 1:
+            return np.array([-1, Ytrain[0], None, None])
+
+        if Xtrain.shape[0] <= self.leaf_size:
+            return np.array([-1, np.mean(Ytrain), None, None])
+
+        all_indexes = self.get_indexes(Xtrain, Ytrain)
+        left_index, right_index, split_index, split_value = all_indexes[0], all_indexes[1], all_indexes[2], all_indexes[3]
+
+        if len(left_index) == 0 or len(left_index) == Xtrain.shape[0]:
+            return np.array([-1, np.mean(Ytrain), None, None])
+
+        left_tree = self.build_tree(np.array([Xtrain[i] for i in left_index]), np.array([Ytrain[i] for i in left_index]))
+        right_tree = self.build_tree(np.array([Xtrain[i] for i in right_index]), np.array([Ytrain[i] for i in right_index]))
+
+        if len(left_tree.shape) == 1:
+            root = [split_index, split_value, 1, 2]
+        else:
+            root = [split_index, split_value, 1, left_tree.shape[0] + 1]
+        return np.vstack((root, left_tree, right_tree))
+
+    def addEvidence(self, Xtrain, Ytrain):
+        # return the tree I built
+        self.tree = self.build_tree(Xtrain, Ytrain)
+
+    def query(self, Xtest):
+        # traverse the tree, find the leaf
+        result = []
+        for each_test in Xtest:
+            row = 0
+            i = int(self.tree[row][0])
+            while i >= 0:
+                val = self.tree[row][1]
+                if each_test[i] <= val:
+                    row = row + int(self.tree[row][2])
+                else:
+                    row = row + int(self.tree[row][3])
+                i = int(self.tree[row][0])
+            result.append(self.tree[row][1])
+        return result
