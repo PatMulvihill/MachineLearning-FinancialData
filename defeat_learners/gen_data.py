@@ -40,10 +40,10 @@ def best4DT(seed=1489):
 
 def best4LinReg(seed=14896833):
     np.random.seed(seed)
-    X = np.random.random(size=(100,3)) * 200 - 100
+    X = np.random.random(size=(100,3)) * 200 - 50
     l = []
     for i in range(np.shape(X)[0]):
-        l.append(X[i][0]*2 + X[i][1]*3 + X[i][2])
+        l.append(X[i][0]*2 + X[i][1]*3 + X[i][2] + randint(1, 20))
 
     Y = np.array(l)
     return X, Y
