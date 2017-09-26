@@ -4,7 +4,7 @@ class DTLearner(object):
 
     def __init__(self, verbose = False):
 
-        
+
         self.tree = np.array([])
 
     def author(self):
