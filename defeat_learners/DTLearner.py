@@ -2,9 +2,9 @@ import numpy as np
 
 class DTLearner(object):
 
-    def __init__(self, leaf_size, verbose):
-        self.leaf_size = leaf_size
-        self.verbose = verbose
+    def __init__(self, verbose = False):
+
+        
         self.tree = np.array([])
 
     def author(self):
@@ -46,7 +46,7 @@ class DTLearner(object):
         if len(np.unique(Ytrain)) == 1:
             return np.array([-1, Ytrain[0], None, None])
 
-        if Xtrain.shape[0] <= self.leaf_size:
+        if Xtrain.shape[0] <= 1:
             return np.array([-1, np.mean(Ytrain), None, None])
 
         all_indexes = self.get_indexes(Xtrain, Ytrain)
