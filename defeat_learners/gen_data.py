@@ -8,10 +8,9 @@ from random import randint
 
 # this function should return a dataset (X and Y) that will work
 # better for linear regression than decision trees
-def best4DT(seed=1489):
+def best4DT(seed=189):
     np.random.seed(seed)
-    x1=[]
-    x2=[]
+
 
     y1=[]
     y2=[]
@@ -19,20 +18,20 @@ def best4DT(seed=1489):
     y4 =[]
     y5 = []
 
-    for i in range(1,101):
-        x1.append(i*2)
-    for j in range (100):
-        x2.append(randint(1, 19))
+    np.random.seed(seed)
+    x1 = abs(np.random.random(size=(20, 3)))
+    x2 = x1*10
+    x3 = x2 *5
+    x4 = 0.1 - x2
+    x5 = 0.1 - x3
+    X = np.vstack((x1,x2,x3,x4,x5))
+
     for i in range(50):
         y1.append(i)
     for i in range(50):
-        y2.append(1-i*2)
+        y2.append(1 - i * 2)
 
-
-    matrix = [[x1[i], x2[i]] for i in range(100)]
-    X= np.array(matrix)
-    Y = np.hstack((np.array(y1),np.array(y2)))
-
+    Y = np.hstack((np.array(y1), np.array(y2)))
 
 
     # Y = X[:,0] + np.sin(X[:,1]) + X[:,2]**2 + X[:,3]**3
