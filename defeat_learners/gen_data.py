@@ -16,19 +16,22 @@ def best4DT(seed=1489):
     y1=[]
     y2=[]
     y3=[]
-    for i in range(100):
-        x1.append(i)
+    y4 =[]
+    y5 = []
+
+    for i in range(1,101):
+        x1.append(i*2)
     for j in range (100):
-        x2.append(j*5)
-    for i in range(30):
-        y1.append(randint(0, 9))
-    for i in range(30):
-        y2.append(randint(0, 9)*5)
-    for i in range(40):
-        y3.append(1-randint(0, 9)*10)
+        x2.append(randint(1, 19))
+    for i in range(50):
+        y1.append(i)
+    for i in range(50):
+        y2.append(1-i*2)
+
+
     matrix = [[x1[i], x2[i]] for i in range(100)]
     X= np.array(matrix)
-    Y = np.hstack((np.array(y1),np.array(y2),np.array(y3)))
+    Y = np.hstack((np.array(y1),np.array(y2)))
 
 
 
