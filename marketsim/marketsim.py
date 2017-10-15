@@ -17,7 +17,7 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
     symbols = list(set(symbols))
     prices = get_data(symbols, pd.date_range(file1.index[0], file1.index[-1]))
     new_dataframe = pd.DataFrame(np.zeros((prices.shape[0], prices.shape[1])), index=prices.index, columns=prices.columns)
-    new_dataframe['CASH'] = start_val
+    new_dataframe['Cash'] = start_val
     for each in file1.iterrows():
         if each[1]['Order'] == 'BUY':
             m = 1
