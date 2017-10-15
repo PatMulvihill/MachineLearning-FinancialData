@@ -24,7 +24,7 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
         else:
             m = -1
         value = m*each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']]
-        new_dataframe.ix[each[0]:, 'Cash'] -= value
+        new_dataframe.ix[each[0]:, 'Cash'] -= value[each[0]]
         new_dataframe.ix[each[0]:,each[1]['Symbol']] += value
     portvals = new_dataframe.sum(axis=1).to_frame()
     return portvals
