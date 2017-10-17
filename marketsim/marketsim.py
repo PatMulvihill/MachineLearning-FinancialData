@@ -19,6 +19,7 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
     prices = get_data(symbols, pd.date_range(file1.index[0], file1.index[-1]))
     prices.fillna(method='ffill', inplace=True)
     prices.fillna(method='bfill', inplace=True)
+    # construct a new dataframe
     new_dataframe = pd.DataFrame(np.zeros((prices.shape[0], prices.shape[1])), index=prices.index, columns=prices.columns)
     new_dataframe['Cash'] = start_val
     for each in file1.iterrows():
@@ -34,11 +35,12 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
             m = -1
             com = commission
             impact_val = impact
-
+        # caculate the value shares*prices
         value = m*each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']]
+        # deduct commision and impact
         total_value = value[each[0]] + com + impact_val * abs(value)
         new_dataframe.ix[each[0]:, 'Cash'] -= total_value
-        new_dataframe.ix[each[0]:,each[1]['Symbol']] += value
+        new_dataframe.ix[each[0]:,each[1]['Symbol']] += (value + impact_val * value)
     portvals = new_dataframe.sum(axis=1).to_frame()
     return portvals
 
