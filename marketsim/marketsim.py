@@ -13,23 +13,32 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
     # TODO: Your code here
 
     file1 = pd.read_csv(orders_file, index_col='Date',parse_dates=True, na_values=['nan'])
+    file1 = file1.sort_index()
     symbols = file1['Symbol'].values
     symbols = list(set(symbols))
     prices = get_data(symbols, pd.date_range(file1.index[0], file1.index[-1]))
+    prices.fillna(method='ffill', inplace=True)
+    prices.fillna(method='bfill', inplace=True)
     new_dataframe = pd.DataFrame(np.zeros((prices.shape[0], prices.shape[1])), index=prices.index, columns=prices.columns)
     new_dataframe['Cash'] = start_val
     for each in file1.iterrows():
+        com = 0
+        impact_val = 0
         if each[1]['Order'] == 'BUY':
             m = 1
-        else:
+            com = commission
+            impact_val = impact
+        if each[1]['Order'] == 'SELL':
             m = -1
-        value = m*each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']]
+            com = commission
+            impact_val = impact
+        value = m*each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']] - com - impact_val * each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']]
         new_dataframe.ix[each[0]:, 'Cash'] -= value[each[0]]
         new_dataframe.ix[each[0]:,each[1]['Symbol']] += value
     portvals = new_dataframe.sum(axis=1).to_frame()
     return portvals
 
-def author(self):
+def author():
     return 'lwang496'
 
 def test_code():
