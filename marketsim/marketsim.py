@@ -40,7 +40,7 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
         # deduct commision and impact
         total_value = value[each[0]] + com + impact_val * abs(value)
         new_dataframe.ix[each[0]:, 'Cash'] -= total_value
-        new_dataframe.ix[each[0]:,each[1]['Symbol']] += (value + impact_val * value)
+        new_dataframe.ix[each[0]:,each[1]['Symbol']] += (value - impact_val * value)
     portvals = new_dataframe.sum(axis=1).to_frame()
     return portvals
 
