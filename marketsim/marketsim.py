@@ -24,16 +24,20 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
     for each in file1.iterrows():
         com = 0
         impact_val = 0
+
         if each[1]['Order'] == 'BUY':
             m = 1
             com = commission
             impact_val = impact
+
         if each[1]['Order'] == 'SELL':
             m = -1
             com = commission
             impact_val = impact
-        value = m*each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']] - com - impact_val * each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']]
-        new_dataframe.ix[each[0]:, 'Cash'] -= value[each[0]]
+
+        value = m*each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']]
+        total_value = value[each[0]] + com + impact_val * value
+        new_dataframe.ix[each[0]:, 'Cash'] -= total_value
         new_dataframe.ix[each[0]:,each[1]['Symbol']] += value
     portvals = new_dataframe.sum(axis=1).to_frame()
     return portvals
