@@ -36,12 +36,14 @@ def compute_portvals(orders_file = "./orders/orders.csv", start_val = 1000000, c
             com = commission
             impact_val = impact
         # caculate the value shares*prices
-        value = m*each[1]['Shares']*prices.ix[each[0]:,each[1]['Symbol']]
+        value = m * each[1]['Shares'] * prices.ix[each[0]:, each[1]['Symbol']]
         # deduct commision and impact
-        total_value = value[each[0]] + com + impact_val * abs(value)
+        total_value = value[each[0]] + com + impact_val * abs(value[each[0]])
         new_dataframe.ix[each[0]:, 'Cash'] -= total_value
-        new_dataframe.ix[each[0]:,each[1]['Symbol']] += (value - impact_val * value)
+        new_dataframe.ix[each[0]:, each[1]['Symbol']] += value
+
     portvals = new_dataframe.sum(axis=1).to_frame()
+
     return portvals
 
 def author():
@@ -52,11 +54,11 @@ def test_code():
     # note that during autograding his function will not be called.
     # Define input parameters
 
-    of = "./orders/orders2.csv"
+    of = "./orders/orders-short.csv"
     sv = 1000000
 
     # Process orders
-    portvals = compute_portvals(orders_file = of, start_val = sv)
+    portvals = compute_portvals(orders_file = of, start_val = sv,commission=9.95, impact=0.005)
     if isinstance(portvals, pd.DataFrame):
         portvals = portvals[portvals.columns[0]] # just get the first column
     else:
@@ -64,8 +66,8 @@ def test_code():
     
     # Get portfolio stats
     # Here we just fake the data. you should use your code from previous assignments.
-    start_date = dt.datetime(2008,1,1)
-    end_date = dt.datetime(2008,6,1)
+    start_date = dt.datetime(2011,1,15)
+    end_date = dt.datetime(2011,1,20)
     cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio = [0.2,0.01,0.02,1.5]
     cum_ret_SPY, avg_daily_ret_SPY, std_daily_ret_SPY, sharpe_ratio_SPY = [0.2,0.01,0.02,1.5]
 

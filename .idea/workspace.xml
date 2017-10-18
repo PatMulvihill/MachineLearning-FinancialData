@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="94bfa3c6-49f4-47b2-82c3-a4b319ccf52e" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/marketsim/marketsim.py" afterPath="$PROJECT_DIR$/marketsim/marketsim.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,11 +38,9 @@
       <file leaf-file-name="marketsim.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/marketsim/marketsim.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
-              <caret line="42" column="64" lean-forward="false" selection-start-line="42" selection-start-column="64" selection-end-line="42" selection-end-column="64" />
-              <folding>
-                <element signature="e#33#52#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-19">
+              <caret line="5" column="9" lean-forward="false" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -113,9 +112,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="27" />
+    <option name="y" value="23" />
     <option name="width" value="1280" />
-    <option name="height" value="722" />
+    <option name="height" value="725" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -132,6 +131,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -248,8 +249,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -267,25 +266,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in testbest4.py">
-    <configuration default="false" name="BagLearner" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/assess_learners" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="ML4T_2017Fall" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/assess_learners/BagLearner.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python tests.Unittests in marketsim.py">
     <configuration default="false" name="RTLearner" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -355,6 +336,21 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
+    <configuration default="false" name="Unittests in marketsim.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/marketsim" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ML4T_2017Fall" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/marketsim/marketsim.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -420,24 +416,27 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.BagLearner" />
-      <item index="1" class="java.lang.String" itemvalue="Python.RTLearner" />
-      <item index="2" class="java.lang.String" itemvalue="Python.DTLearner" />
-      <item index="3" class="java.lang.String" itemvalue="Python.DTLearner (1)" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in testbest4.py" />
+      <item index="0" class="java.lang.String" itemvalue="Python.RTLearner" />
+      <item index="1" class="java.lang.String" itemvalue="Python.DTLearner" />
+      <item index="2" class="java.lang.String" itemvalue="Python.DTLearner (1)" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests in testbest4.py" />
+      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in marketsim.py" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in testbest4.py" />
-        <item index="1" class="java.lang.String" itemvalue="Python.DTLearner (1)" />
-        <item index="2" class="java.lang.String" itemvalue="Python.RTLearner" />
-        <item index="3" class="java.lang.String" itemvalue="Python.DTLearner" />
-        <item index="4" class="java.lang.String" itemvalue="Python.BagLearner" />
+        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in marketsim.py" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in testbest4.py" />
+        <item index="2" class="java.lang.String" itemvalue="Python.DTLearner (1)" />
+        <item index="3" class="java.lang.String" itemvalue="Python.RTLearner" />
+        <item index="4" class="java.lang.String" itemvalue="Python.DTLearner" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -453,6 +452,9 @@
     <history-entry file="Unittests_in_analysis_py - 2017.09.04 at 18h 37m 22s.xml">
       <configuration name="Unittests in analysis.py" configurationId="tests" />
     </history-entry>
+    <history-entry file="Unittests_in_marketsim_py - 2017.10.17 at 19h 40m 24s.xml">
+      <configuration name="Unittests in marketsim.py" configurationId="tests" />
+    </history-entry>
     <history-entry file="Unittests_in_optimization_py - 2017.09.05 at 11h 08m 07s.xml">
       <configuration name="Unittests in optimization.py" configurationId="tests" />
     </history-entry>
@@ -467,7 +469,7 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1280" height="722" extended-state="6" />
+    <frame x="0" y="23" width="1280" height="725" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16015625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -512,11 +514,16 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/marketsim/marketsim.py</url>
-          <line>43</line>
+          <line>44</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/marketsim/marketsim.py</url>
+          <line>24</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="5" />
+      <option name="time" value="7" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -881,11 +888,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/marketsim/marketsim.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="42" column="64" lean-forward="false" selection-start-line="42" selection-start-column="64" selection-end-line="42" selection-end-column="64" />
-          <folding>
-            <element signature="e#33#52#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-19">
+          <caret line="5" column="9" lean-forward="false" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+          <folding />
         </state>
       </provider>
     </entry>
