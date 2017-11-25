@@ -96,10 +96,10 @@ class StrategyLearner(object):
         while not converged:
             days = 0
             position = 0
-            state = position * 500 + train_states[days, 0]
+            state = position * 700 + train_states[days, 0]
             action = self.learner.querysetstate(state)
-
-            for days in range(1, train_states.size):
+            total_days = train_states.shape[0]
+            for days in range(1, total_days):
                 if position == 0:
                     if action == 1:
                         position = 1
