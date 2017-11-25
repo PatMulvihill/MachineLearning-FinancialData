@@ -215,18 +215,19 @@ class StrategyLearner(object):
         SMA_ratio_n.ix[:, 0] = np.digitize(SMA_ratio.ix[:, 0],
                                            np.linspace(min1, max1, 10)) - 1
         bbp_n = bbp
-        min2 = bbp.ix[:, 0].min
-        max2 = bbp.ix[:, 0].max
+        min2 = bbp.ix[:, 0].min()
+        max2 = bbp.ix[:, 0].max()
+
         bbp_n.ix[:, 0] = np.digitize(bbp.ix[:, 0], np.linspace(min2, max2, 10)) - 1
 
         momentum_n = momentum
-        min3 = momentum.ix[:, 0].min
-        max3 = momentum.ix[:, 0].max
+        min3 = momentum.ix[:, 0].min()
+        max3 = momentum.ix[:, 0].max()
         momentum_n.ix[:, 0] = np.digitize(momentum.ix[:, 0], np.linspace(min3, max3, 10)) - 1
 
         vol_n = vol
-        min4 = vol.ix[:, 0],min
-        max4 = vol.ix[:, 0].max
+        min4 = vol.ix[:, 0],min()
+        max4 = vol.ix[:, 0].max()
         vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(min4, max4, 10)) - 1
         return SMA_ratio_n,bbp_n,momentum_n, vol_n
 
