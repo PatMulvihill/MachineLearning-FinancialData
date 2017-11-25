@@ -80,27 +80,23 @@ class StrategyLearner(object):
         # strategy learner
 
         train_states = train_bbp[symbol] * 50 + train_P_SMA_ratio[symbol] * 50
-        train_states = train_states.values
-        train_states_size = train_states.size
-        train_start = train_states.index[0]
-        train_end = train_states.index[-1]
-        Qframe = pd.DataFrame(index=pd.date_range(train_start, train_end),
+
+        Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
-
-
+        train_states = train_states.values
         Qframe.ix[:, 'Pos'] = 0
         Qframe.ix[:, 'Price'] = prices.ix[:, symbol]
-        Qframe.ix[:, 'Cash'] = sv
-        Qframe.ix[:, 'P_V'] = sv
+        Qframe.ix[:, 'Cash'] = Qframe.ix[:, 'P_V'] = sv
         Qframe = Qframe.dropna().values
 
-        for i in range(500):
+        i = 0
+        while i < 1500:
             days = 0
             position = 0
             state = position * 1000 + train_states[days, 0]
             action = self.learner.querysetstate(state)
 
-            for days in range(1, train_states_size):
+            for days in range(1, train_states.size):
                 if position == 0:
                     if action == 1:
                         position = 1
