@@ -6,8 +6,6 @@ import datetime as dt
 import pandas as pd
 import util as ut
 import random
-import QLearner as ql
-import indicators as ind
 
 class StrategyLearner(object):
 
@@ -23,6 +21,7 @@ class StrategyLearner(object):
         sv = 10000):
 
         # add your code to do learning here
+        lookback =21
 
         # example usage of the old backward compatible util function
         syms=[symbol]
@@ -32,15 +31,29 @@ class StrategyLearner(object):
         prices_SPY = prices_all['SPY']  # only SPY, for comparison later
         if self.verbose: print prices
 
-
-
         # example use with new colname
         volume_all = ut.get_data(syms, dates, colname = "Volume")  # automatically adds SPY
         volume = volume_all[syms]  # only portfolio symbols
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        sma_train, sma_n_train, bbp_train, top_band_train, bottom_band_train, momentum_train = ind.caculate(symbol, sd,ed)
+
+        train_sma = prices.rolling(window=21, min_periods=21).mean()
+        train_sma.fillna(method='ffill', inplace=True)
+        train_sma.fillna(method='bfill', inplace=True)
+
+        train_rolling_std = prices.rolling(window=lookback, min_periods=lookback).std()
+        top_band = train_sma + (2 * train_rolling_std)
+        bottom_band = train_sma - (2 * train_rolling_std)
+        train_bbp = (prices - bottom_band) / (top_band - bottom_band)
+        # turn sma into price/sma ratio
+        train_sma_ratio = prices / train_sma
+
+        # caculate momentum
+        train_momentum = (prices / prices.copy().shift(lookback)) - 1
+
+
+
 
 
 

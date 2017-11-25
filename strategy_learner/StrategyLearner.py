@@ -6,9 +6,8 @@ import datetime as dt
 import pandas as pd
 import util as ut
 import random
-import QLearner as ql
 import numpy as np
-
+import QLearner as ql
 
 class StrategyLearner(object):
 
@@ -23,10 +22,11 @@ class StrategyLearner(object):
         ed=dt.datetime(2009,1,1), \
         sv = 10000):
 
+
         # add your code to do learning here
 
         # example usage of the old backward compatible util function
-        syms=[symbol]
+        syms = [symbol]
         dates = pd.date_range(sd, ed)
         prices_all = ut.get_data(syms, dates)  # automatically adds SPY
         prices = prices_all[syms]  # only portfolio symbols
@@ -34,36 +34,39 @@ class StrategyLearner(object):
         if self.verbose: print prices
 
         # example use with new colname
-        volume_all = ut.get_data(syms, dates, colname = "Volume")  # automatically adds SPY
+        volume_all = ut.get_data(syms, dates, colname="Volume")  # automatically adds SPY
         volume = volume_all[syms]  # only portfolio symbols
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
         self.learner = ql.QLearner(num_states=3000, \
-        num_actions = 3, \
-        alpha = 0.2, \
-        gamma = 0.9, \
-        rar = 0.5, \
-        radr = 0.99, \
-        dyna = 0, \
-        verbose = False)
+                                   num_actions=3, \
+                                   alpha=0.2, \
+                                   gamma=0.9, \
+                                   rar=0.5, \
+                                   radr=0.99, \
+                                   dyna=0, \
+                                   verbose=False)
 
-        train_SMA= prices.rolling(14, 14).mean()
+        train_SMA = prices.rolling(window=14, min_periods=14).mean()
         train_SMA.fillna(method='ffill', inplace=True)
         train_SMA.fillna(method='bfill', inplace=True)
-
-        # caculate bbp
-        rolling_std = prices.rolling(window=14, min_periods=14).std()
-        top_band = train_SMA + (2 * rolling_std)
-        bottom_band = train_SMA - (2 * rolling_std)
+        train_P_SMA_ratio = prices / train_SMA
+        train_rolling_std = prices.rolling(window=14, min_periods=14).std()
+        top_band = train_SMA + (2 * train_rolling_std)
+        bottom_band = train_SMA - (2 * train_rolling_std)
         train_bbp = (prices - bottom_band) / (top_band - bottom_band)
         # turn sma into price/sma ratio
-        train_P_SMA_ratio = prices / train_SMA
+        train_sma_ratio = prices / train_SMA
+
+        # caculate momentum
+        train_momentum = (prices / prices.copy().shift(14)) - 1
+
         train_daily_rets = (prices / prices.shift(1)) - 1
         train_vol = pd.rolling_std(train_daily_rets, 14)
         train_vol.fillna(method='ffill', inplace=True)
         train_vol.fillna(method='bfill', inplace=True)
-        train_momentum = (prices / prices.copy().shift(14)) - 1
+
 
         '''DISCRETIZE'''
         bins_bbp = np.linspace(train_bbp.ix[:, 0].min(), train_bbp.ix[:, 0].max(), 10)
@@ -78,11 +81,11 @@ class StrategyLearner(object):
         bins_vol = np.linspace(train_vol.ix[:, 0].min(), train_vol.ix[:, 0].max(), 10)
         train_vol.ix[:, 0] = np.digitize(train_vol.ix[:, 0], bins_vol) - 1
 
-        train_indicator = pd.concat([train_bbp, train_P_SMA_ratio, train_vol],
+        train_indicator = pd.concat([train_bbp, train_momentum, train_vol],
                                     keys=['Ind1', 'Ind2', 'Ind3'], axis=1)
 
-        train_states = train_indicator['Ind1'] * 50 + \
-                       train_indicator['Ind2'] * 50 + \
+        train_states = train_indicator['Ind1'] * 100 + \
+                       train_indicator['Ind2'] * 10 + \
                        train_indicator['Ind3']
 
         Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
@@ -133,21 +136,24 @@ class StrategyLearner(object):
                 reward = Qframe[days, 3] / Qframe[days - 1, 3] - 1
                 state = position * 1000 + train_states[days, 0]
                 action = self.learner.query(state, reward)
-            i += 1
-    # this method should use the existing policy and test it against new data
-    def testPolicy(self, symbol = "IBM", \
-        sd=dt.datetime(2009,1,1), \
-        ed=dt.datetime(2010,1,1), \
-        sv = 10000):
+           
+            # print Qframe
+
+            # this method should use the existing policy and test it against new data
+
+    def testPolicy(self, symbol="IBM", \
+                   sd=dt.datetime(2009, 1, 1), \
+                   ed=dt.datetime(2010, 1, 1), \
+                   sv=100000):
 
         # here we build a fake set of trades
         # your code should return the same sort of data
         dates = pd.date_range(sd, ed)
         prices_all = ut.get_data([symbol], dates)  # automatically adds SPY
-        trades = prices_all[[symbol,]]  # only portfolio symbols
-        trades_SPY = prices_all['SPY']  # only SPY, for comparison later
-        trades.values[:,:] = 0 # set them all to nothing
         prices = prices_all[[symbol]]
+        trades = prices.copy()  # only portfolio symbols
+        trades.values[:, :] = 0
+        trades_SPY = prices_all['SPY']  # only SPY, for comparison later
 
         test_SMA = pd.rolling_mean(prices, 15).fillna(method='bfill')
         test_stdev = pd.rolling_std(prices, 15).fillna(method='bfill')
@@ -210,5 +216,5 @@ class StrategyLearner(object):
         if self.verbose: print prices_all
         return trades
 
-if __name__=="__main__":
-    print "One does not simply think up a strategy"
+    if __name__ == "__main__":
+        print "One does not simply think up a strategy"
