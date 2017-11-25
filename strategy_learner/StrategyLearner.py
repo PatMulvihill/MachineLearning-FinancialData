@@ -101,39 +101,40 @@ class StrategyLearner(object):
         round = 0
         while not converged:
 
-            position = 0
-            state = position * 700 + train_states[0, 0]
+            p = 0
+            state = p * 700 + train_states[0, 0]
             action = self.learner.querysetstate(state)
             total_days = train_states.shape[0]
             for days in range(1, total_days):
-                if position == 0 and action == 1:
-                    position = 1
+                
+                if p == 0 and action == 1:
+                    p = 1
                     Qvalue[days, 0] = -1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 1000
-                elif position==0 and action == 2:
-                    position = 2
+                elif p==0 and action == 2:
+                    p = 2
                     Qvalue[days, 0] = 1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 1000
-                
 
-                elif position == 1 and action == 2:
-                    position = 2
+
+                elif p == 1 and action == 2:
+                    p = 2
                     Qvalue[days, 0] = 1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 2000
 
-                elif position == 2 and action == 1:
-                    position = 1
+                elif p == 2 and action == 1:
+                    p = 1
                     Qvalue[days, 0] = -1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 2000
 
                 else:
-                    position = position
+
                     Qvalue[days, 0] = Qvalue[days - 1, 0]
                     Qvalue[days, 2] = Qvalue[days - 1, 2]
 
                 Qvalue[days, 3] = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
                 reward = Qvalue[days, 3] / Qvalue[days - 1, 3] - 1
-                state = position * 1000 + train_states[days, 0]
+                state = p * 1000 + train_states[days, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
