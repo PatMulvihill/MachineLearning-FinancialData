@@ -96,10 +96,12 @@ class StrategyLearner(object):
         Qframe.ix[:, 'Cash'] = Qframe.ix[:, 'P_V'] = sv
         Qframe = Qframe.dropna().values
 
-        for i in range(500):
+        converged = False
+        round = 0
+        while not converged:
             days = 0
             position = 0
-            state = position * 1000 + train_states[days, 0]
+            state = train_states.ix[0, symbol]
             action = self.learner.querysetstate(state)
 
             for days in range(1, train_states.size):
@@ -136,7 +138,11 @@ class StrategyLearner(object):
                 reward = Qframe[days, 3] / Qframe[days - 1, 3] - 1
                 state = position * 1000 + train_states[days, 0]
                 action = self.learner.query(state, reward)
-           
+
+            round += 1
+            if round > 1000:
+                converged = True
+
             # print Qframe
 
             # this method should use the existing policy and test it against new data
