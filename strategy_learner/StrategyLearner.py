@@ -48,12 +48,12 @@ class StrategyLearner(object):
         dyna = 0, \
         verbose = False)
 
-        train_SMA= prices.rolling(21, 21).mean()
+        train_SMA= prices.rolling(14, 14).mean()
         train_SMA.fillna(method='ffill', inplace=True)
         train_SMA.fillna(method='bfill', inplace=True)
 
         # caculate bbp
-        rolling_std = prices.rolling(window=21, min_periods=21).std()
+        rolling_std = prices.rolling(window=14, min_periods=14).std()
         top_band = train_SMA + (2 * rolling_std)
         bottom_band = train_SMA - (2 * rolling_std)
         train_bbp = (prices - bottom_band) / (top_band - bottom_band)
@@ -61,12 +61,12 @@ class StrategyLearner(object):
         train_P_SMA_ratio = prices / train_SMA
 
         # caculate momentum
-        train_momentum = (prices / prices.copy().shift(21)) - 1
+        train_momentum = (prices / prices.copy().shift(14)) - 1
 
-        train_daily_rets = (prices / prices.shift(1)) - 1
-        train_vol = pd.rolling_std(train_daily_rets, 21).fillna(method='bfill')
 
-        '''DISCRETIZE'''
+
+        # discretize those indicators
+
         bins_bbp = np.linspace(train_bbp.ix[:, 0].min(), train_bbp.ix[:, 0].max(), 10)
         train_bbp.ix[:, 0] = np.digitize(train_bbp.ix[:, 0], bins_bbp) - 1
 
@@ -76,15 +76,13 @@ class StrategyLearner(object):
         bins_P_SMA_ratio = np.linspace(train_P_SMA_ratio.ix[:, 0].min(), train_P_SMA_ratio.ix[:, 0].max(), 10)
         train_P_SMA_ratio.ix[:, 0] = np.digitize(train_P_SMA_ratio.ix[:, 0], bins_P_SMA_ratio) - 1
 
-        bins_vol = np.linspace(train_vol.ix[:, 0].min(), train_vol.ix[:, 0].max(), 10)
-        train_vol.ix[:, 0] = np.digitize(train_vol.ix[:, 0], bins_vol) - 1
 
-        train_indicator = pd.concat([train_bbp, train_momentum, train_vol],
-                                    keys=['Ind1', 'Ind2', 'Ind3'], axis=1)
+        # strategy learner
+        indicators = pd.concat([train_bbp, train_P_SMA_ratio],
+                                    keys=['bbp', 'sma_ratio'], axis=1)
 
-        train_states = train_indicator['Ind1'] * 100 + \
-                       train_indicator['Ind2'] * 10 + \
-                       train_indicator['Ind3']
+        train_states = train_bbp[symbol] * 50 + train_P_SMA_ratio[symbol] * 50
+
 
         Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
