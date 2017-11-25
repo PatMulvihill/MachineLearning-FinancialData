@@ -164,13 +164,26 @@ class StrategyLearner(object):
         trades.values[:, :] = 0
         trades_SPY = prices_all['SPY']  # only SPY, for comparison later
 
-        test_SMA = pd.rolling_mean(prices, 15).fillna(method='bfill')
-        test_stdev = pd.rolling_std(prices, 15).fillna(method='bfill')
+        test_SMA = prices.rolling(window=14, min_periods=14).mean()
+        test_SMA.fillna(method='ffill', inplace=True)
+        test_SMA.fillna(method='bfill', inplace=True)
         test_P_SMA_ratio = prices / test_SMA
-        test_momentum = (prices / prices.shift(15) - 1).fillna(method='bfill')
-        test_bbp = (prices - test_SMA + 2 * test_stdev) / (4 * test_stdev)
+        test_rolling_std = prices.rolling(window=14, min_periods=14).std()
+        top_band = test_SMA + (2 * test_rolling_std)
+        bottom_band = test_SMA - (2 * test_rolling_std)
+        test_bbp = (prices - bottom_band) / (top_band - bottom_band)
+        # turn sma into price/sma ratio
+        test_sma_ratio = prices / test_SMA
+
+        # caculate momentum
+        test_momentum = (prices / prices.copy().shift(14)) - 1
+
         test_daily_rets = (prices / prices.shift(1)) - 1
-        test_vol = pd.rolling_std(test_daily_rets, 15).fillna(method='bfill')
+        test_vol = pd.rolling_std(test_daily_rets, 14)
+        test_vol.fillna(method='ffill', inplace=True)
+        test_vol.fillna(method='bfill', inplace=True)
+
+
 
         '''DISCRETIZE'''
         bins_bbp = np.linspace(test_bbp.ix[:, 0].min(), test_bbp.ix[:, 0].max(), 10)
@@ -185,12 +198,9 @@ class StrategyLearner(object):
         bins_vol = np.linspace(test_vol.ix[:, 0].min(), test_vol.ix[:, 0].max(), 10)
         test_vol.ix[:, 0] = np.digitize(test_vol.ix[:, 0], bins_vol) - 1
 
-        test_indicator = pd.concat([test_bbp, test_momentum, test_vol],
-                                   keys=['Ind1', 'Ind2', 'Ind3'], axis=1)
+       
 
-        test_states = test_indicator['Ind1'] * 100 + \
-                      test_indicator['Ind2'] * 10 + \
-                      test_indicator['Ind3']
+        test_states = test_bbp * 50 + test_P_SMA_ratio * 50 + test_momentum * 10 + test_vol
 
         '''TEST'''
         test_states = test_states.values
