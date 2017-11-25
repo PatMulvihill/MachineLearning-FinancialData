@@ -86,7 +86,8 @@ class StrategyLearner(object):
         train_states = train_bbp * 50 + train_P_SMA_ratio * 50 + train_momentum * 10 + train_vol
         start = train_states.index[0]
         end = train_states.index[-1]
-        Qframe = pd.DataFrame(index=pd.date_range(start, end),
+        dates = pd.date_range(start, end)
+        Qframe = pd.DataFrame(index=dates,
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
         train_states = train_states.values
         Qframe.ix[:, 'Pos'] = 0
