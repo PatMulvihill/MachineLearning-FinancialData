@@ -94,7 +94,8 @@ class StrategyLearner(object):
         Qframe['Price'] = prices.ix[start:end, symbol]
         Qframe['Cash'] = sv
         Qframe['P_V'] = sv
-        Qframe = Qframe.dropna().values
+        Qframe.fillna(method='ffill', inplace=True)
+        Qframe.fillna(method='bfill', inplace=True)
 
         converged = False
         round = 0
@@ -108,34 +109,34 @@ class StrategyLearner(object):
                 if position == 0:
                     if action == 1:
                         position = 1
-                        Qframe[days, 0] = -1000
-                        Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 1000
+                        Qframe.ix[days, 0] = -1000
+                        Qframe.ix[days, 2] = Qframe.ix[days - 1, 2] + Qframe.ix[days, 1] * 1000
                     elif action == 2:
                         position = 2
-                        Qframe[days, 0] = 1000
-                        Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 1000
+                        Qframe.ix[days, 0] = 1000
+                        Qframe.ix[days, 2] = Qframe.ix[days - 1, 2] - Qframe.ix[days, 1] * 1000
                     else:
                         position = 0
-                        Qframe[days, 0] = Qframe[days - 1, 0]
-                        Qframe[days, 2] = Qframe[days - 1, 2]
+                        Qframe.ix[days, 0] = Qframe.ix[days - 1, 0]
+                        Qframe.ix[days, 2] = Qframe.ix[days - 1, 2]
 
                 elif position == 1 and action == 2:
                     position = 2
-                    Qframe[days, 0] = 1000
-                    Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 2000
+                    Qframe.ix[days, 0] = 1000
+                    Qframe.ix[days, 2] = Qframe.ix[days - 1, 2] - Qframe.ix[days, 1] * 2000
 
                 elif position == 2 and action == 1:
                     position = 1
-                    Qframe[days, 0] = -1000
-                    Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 2000
+                    Qframe.ix[days, 0] = -1000
+                    Qframe.ix[days, 2] = Qframe.ix[days - 1, 2] + Qframe.ix[days, 1] * 2000
 
                 else:
                     position = position
-                    Qframe[days, 0] = Qframe[days - 1, 0]
-                    Qframe[days, 2] = Qframe[days - 1, 2]
+                    Qframe.ix[days, 0] = Qframe.ix[days - 1, 0]
+                    Qframe.ix[days, 2] = Qframe.ix[days - 1, 2]
 
-                Qframe[days, 3] = Qframe[days, 2] + Qframe[days, 0] * Qframe[days, 1]
-                reward = Qframe[days, 3] / Qframe[days - 1, 3] - 1
+                Qframe.ix[days, 3] = Qframe.ix[days, 2] + Qframe.ix[days, 0] * Qframe.ix[days, 1]
+                reward = Qframe.ix[days, 3] / Qframe.ix[days - 1, 3] - 1
                 state = position * 1000 + train_states[days, 0]
                 action = self.learner.query(state, reward)
 
