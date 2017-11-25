@@ -173,7 +173,7 @@ class StrategyLearner(object):
         test_vol.fillna(method='bfill', inplace=True)
 
         test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_vol_n = self.discritize(test_P_SMA_ratio,test_bbp,test_momentum, test_vol)
-        
+
 
         test_states = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_vol_n
 
@@ -210,16 +210,24 @@ class StrategyLearner(object):
     def discritize(self,SMA_ratio,bbp,momentum, vol ):
 
         SMA_ratio_n = SMA_ratio
+        min1 = min(SMA_ratio.ix[:, 0])
+        max1 = max(SMA_ratio.ix[:, 0])
         SMA_ratio_n.ix[:, 0] = np.digitize(SMA_ratio.ix[:, 0],
-                                           np.linspace(SMA_ratio.ix[:, 0].min(), SMA_ratio.ix[:, 0].max(), 10)) - 1
+                                           np.linspace(min1, max1, 10)) - 1
         bbp_n = bbp
-        bbp_n.ix[:, 0] = np.digitize(bbp.ix[:, 0], np.linspace(bbp.ix[:, 0].min(), bbp.ix[:, 0].max(), 10)) - 1
+        min2 = min(bbp.ix[:, 0])
+        max2 = max(bbp.ix[:, 0])
+        bbp_n.ix[:, 0] = np.digitize(bbp.ix[:, 0], np.linspace(min2, max2, 10)) - 1
 
         momentum_n = momentum
-        momentum_n.ix[:, 0] = np.digitize(momentum.ix[:, 0], np.linspace(momentum.ix[:, 0].min(), momentum.ix[:, 0].max(), 10)) - 1
+        min3 = min(momentum.ix[:, 0])
+        max3 = max(momentum.ix[:, 0])
+        momentum_n.ix[:, 0] = np.digitize(momentum.ix[:, 0], np.linspace(min3, max3, 10)) - 1
 
         vol_n = vol
-        vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(vol.ix[:, 0].min(), vol.ix[:, 0].max(), 10)) - 1
+        min4 = min(vol.ix[:, 0])
+        max4 = max(vol.ix[:, 0])
+        vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(min4, max4, 10)) - 1
         return SMA_ratio_n,bbp_n,momentum_n, vol_n
 
     if __name__ == "__main__":
