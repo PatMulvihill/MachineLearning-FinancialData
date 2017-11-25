@@ -210,23 +210,23 @@ class StrategyLearner(object):
     def discritize(self,SMA_ratio,bbp,momentum, vol ):
 
         SMA_ratio_n = SMA_ratio
-        min1 = min(SMA_ratio.ix[:, 0])
-        max1 = max(SMA_ratio.ix[:, 0])
+        min1 = SMA_ratio.ix[:, 0].min()
+        max1 = SMA_ratio.ix[:, 0].max()
         SMA_ratio_n.ix[:, 0] = np.digitize(SMA_ratio.ix[:, 0],
                                            np.linspace(min1, max1, 10)) - 1
         bbp_n = bbp
-        min2 = min(bbp.ix[:, 0])
-        max2 = max(bbp.ix[:, 0])
+        min2 = bbp.ix[:, 0].min
+        max2 = bbp.ix[:, 0].max
         bbp_n.ix[:, 0] = np.digitize(bbp.ix[:, 0], np.linspace(min2, max2, 10)) - 1
 
         momentum_n = momentum
-        min3 = min(momentum.ix[:, 0])
-        max3 = max(momentum.ix[:, 0])
+        min3 = momentum.ix[:, 0].min
+        max3 = momentum.ix[:, 0].max
         momentum_n.ix[:, 0] = np.digitize(momentum.ix[:, 0], np.linspace(min3, max3, 10)) - 1
 
         vol_n = vol
-        min4 = min(vol.ix[:, 0])
-        max4 = max(vol.ix[:, 0])
+        min4 = vol.ix[:, 0],min
+        max4 = vol.ix[:, 0].max
         vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(min4, max4, 10)) - 1
         return SMA_ratio_n,bbp_n,momentum_n, vol_n
 
