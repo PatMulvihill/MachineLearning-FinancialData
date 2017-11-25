@@ -94,8 +94,7 @@ class StrategyLearner(object):
         Qframe['Price'] = prices.ix[start:end, symbol]
         Qframe['Cash'] = sv
         Qframe['P_V'] = sv
-        Qframe.fillna(method='ffill', inplace=True)
-        Qframe.fillna(method='bfill', inplace=True)
+        Qframe = Qframe.dropna().values
 
         converged = False
         round = 0
