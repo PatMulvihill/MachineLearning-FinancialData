@@ -106,19 +106,15 @@ class StrategyLearner(object):
             action = self.learner.querysetstate(state)
             total_days = train_states.shape[0]
             for days in range(1, total_days):
-                if position == 0:
-                    if action == 1:
-                        position = 1
-                        Qvalue[days, 0] = -1000
-                        Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 1000
-                    elif action == 2:
-                        position = 2
-                        Qvalue[days, 0] = 1000
-                        Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 1000
-                    else:
-                        position = 0
-                        Qvalue[days, 0] = Qvalue[days - 1, 0]
-                        Qvalue[days, 2] = Qvalue[days - 1, 2]
+                if position == 0 and action == 1:
+                    position = 1
+                    Qvalue[days, 0] = -1000
+                    Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 1000
+                elif position==0 and action == 2:
+                    position = 2
+                    Qvalue[days, 0] = 1000
+                    Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 1000
+                
 
                 elif position == 1 and action == 2:
                     position = 2
