@@ -78,11 +78,12 @@ class StrategyLearner(object):
         bins_vol = np.linspace(train_vol.ix[:, 0].min(), train_vol.ix[:, 0].max(), 10)
         train_vol.ix[:, 0] = np.digitize(train_vol.ix[:, 0], bins_vol) - 1
 
-       
+        train_indicator = pd.concat([train_bbp, train_P_SMA_ratio, train_vol],
+                                    keys=['Ind1', 'Ind2', 'Ind3'], axis=1)
 
-        train_states = train_P_SMA_ratio[symbol] * 50 + \
-                       train_bbp[symbol] * 50 + \
-                       train_vol[symbol]
+        train_states = train_indicator['Ind1'] * 50 + \
+                       train_indicator['Ind2'] * 50 + \
+                       train_indicator['Ind3']
 
         Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
@@ -92,8 +93,7 @@ class StrategyLearner(object):
         Qframe.ix[:, 'Cash'] = Qframe.ix[:, 'P_V'] = sv
         Qframe = Qframe.dropna().values
 
-        i = 0
-        while i < 1500:
+        for i in range(500):
             days = 0
             position = 0
             state = position * 1000 + train_states[days, 0]
