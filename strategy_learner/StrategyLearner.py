@@ -38,7 +38,7 @@ class StrategyLearner(object):
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        self.learner = ql.QLearner(num_states=100, \
+        self.learner = ql.QLearner(num_states=3000, \
         num_actions = 3, \
         alpha = 0.2, \
         gamma = 0.9, \
@@ -84,7 +84,7 @@ class StrategyLearner(object):
         Qframe = Qframe.dropna().values
 
         i = 0
-        while i < 1000:
+        while i < 500:
             days = 0
             position = 0
             state = position * 1000 + train_states[days, 0]
