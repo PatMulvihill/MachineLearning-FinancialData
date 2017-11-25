@@ -8,6 +8,7 @@ import util as ut
 import random
 import QLearner as ql
 import numpy as np
+import indicators as ind
 
 class StrategyLearner(object):
 
@@ -47,13 +48,11 @@ class StrategyLearner(object):
         dyna = 0, \
         verbose = False)
 
-        train_SMA = pd.rolling_mean(prices, 15).fillna(method='bfill')
-        train_stdev = pd.rolling_std(prices, 15).fillna(method='bfill')
-        train_P_SMA_ratio = prices / train_SMA
-        train_momentum = (prices / prices.shift(15) - 1).fillna(method='bfill')
-        train_bbp = (prices - train_SMA + 2 * train_stdev) / (4 * train_stdev)
+        train_SMA, train_P_SMA_ratio, train_bbp, top_band, bottom_band, train_momentum = ind.caculate(symbol, sd,
+                                                                    ed)
+
         train_daily_rets = (prices / prices.shift(1)) - 1
-        train_vol = pd.rolling_std(train_daily_rets, 15).fillna(method='bfill')
+        train_vol = pd.rolling_std(train_daily_rets, 21).fillna(method='bfill')
 
         '''DISCRETIZE'''
         bins_bbp = np.linspace(train_bbp.ix[:, 0].min(), train_bbp.ix[:, 0].max(), 10)
