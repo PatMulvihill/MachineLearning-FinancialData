@@ -93,7 +93,6 @@ class StrategyLearner(object):
         Qframe['Pos'] = 0
         Qframe['Price'] = prices.ix[start:end, symbol]
         Qframe['Cash'] = sv
-        Qframe['P_V'] = sv
         Qframe.fillna(method='ffill', inplace=True)
         Qframe.fillna(method='bfill', inplace=True)
         Qvalue = Qframe.values
@@ -109,34 +108,41 @@ class StrategyLearner(object):
             for days in range(1, total_days):
 
                 if p == 0 and action == 1:
-                    p = 1
+
                     Qvalue[days, 0] = -1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 1000
+                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    p = 1
                 elif p==0 and action == 2:
-                    p = 2
+
                     Qvalue[days, 0] = 1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 1000
-
+                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    p = 2
 
                 elif p == 1 and action == 2:
-                    p = 2
+
                     Qvalue[days, 0] = 1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 2000
+                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    p = 2
 
                 elif p == 2 and action == 1:
-                    p = 1
+
                     Qvalue[days, 0] = -1000
                     Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 2000
+                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    p = 1
 
                 else:
 
                     Qvalue[days, 0] = Qvalue[days - 1, 0]
                     Qvalue[days, 2] = Qvalue[days - 1, 2]
+                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
 
-                curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state = p * 1000 + train_states[days, 0]
+                state = p * 700 + train_states[days, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
