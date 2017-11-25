@@ -38,14 +38,14 @@ class StrategyLearner(object):
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        self.learner = ql.QLearner(num_states=3000, \
-                                   num_actions=3, \
-                                   alpha=0.2, \
-                                   gamma=0.9, \
-                                   rar=0.98, \
-                                   radr=0.999, \
-                                   dyna=0, \
-                                   verbose=False)
+        self.learner = ql.QLearner(num_states=100, \
+        num_actions = 3, \
+        alpha = 0.2, \
+        gamma = 0.9, \
+        rar = 0.5, \
+        radr = 0.99, \
+        dyna = 0, \
+        verbose = False)
 
         train_SMA = pd.rolling_mean(prices, 15).fillna(method='bfill')
         train_stdev = pd.rolling_std(prices, 15).fillna(method='bfill')
