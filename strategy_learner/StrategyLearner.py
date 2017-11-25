@@ -84,8 +84,9 @@ class StrategyLearner(object):
         train_vol.ix[:, 0] = np.digitize(train_vol.ix[:, 0], bins_vol) - 1
 
         train_states = train_bbp * 50 + train_P_SMA_ratio * 50 + train_momentum * 10 + train_vol
-
-        Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
+        start = train_states.index[0]
+        end = train_states.index[-1]
+        Qframe = pd.DataFrame(index=pd.date_range(start, end),
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
         train_states = train_states.values
         Qframe.ix[:, 'Pos'] = 0
@@ -112,23 +113,19 @@ class StrategyLearner(object):
                         Qframe[days, 0] = 1000
                         Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 1000
                     else:
-
+                        position = 0
                         Qframe[days, 0] = Qframe[days - 1, 0]
                         Qframe[days, 2] = Qframe[days - 1, 2]
 
-                elif position == 1:
-                    if action == 2:
-                        position = 2
-                        Qframe[days, 0] = 1000
-                        Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 2000
+                elif position == 1 and action == 2:
+                    position = 2
+                    Qframe[days, 0] = 1000
+                    Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 2000
 
-
-                elif position == 2:
-                    if action ==1:
-                        position = 1
-                        Qframe[days, 0] = -1000
-                        Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 2000
-
+                elif position == 2 and action == 1:
+                    position = 1
+                    Qframe[days, 0] = -1000
+                    Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 2000
 
                 else:
                     position = position
