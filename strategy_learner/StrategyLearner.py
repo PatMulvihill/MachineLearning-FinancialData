@@ -226,7 +226,7 @@ class StrategyLearner(object):
         momentum_n.ix[:, 0] = np.digitize(momentum.ix[:, 0], np.linspace(min3, max3, 10)) - 1
 
         vol_n = vol
-        min4 = vol.ix[:, 0],min()
+        min4 = vol.ix[:, 0].min()
         max4 = vol.ix[:, 0].max()
         vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(min4, max4, 10)) - 1
         return SMA_ratio_n,bbp_n,momentum_n, vol_n
