@@ -11,8 +11,9 @@ import numpy as np
 
 class StrategyLearner(object):
     # constructor
-    def __init__(self, verbose=False):
+    def __init__(self, verbose=False,impact=0.0):
         self.verbose = verbose
+        self.impact = impact
 
     # this method should create a QLearner, and train it for trading
     def addEvidence(self, symbol="IBM", \

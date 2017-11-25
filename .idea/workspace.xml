@@ -2,48 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="94bfa3c6-49f4-47b2-82c3-a4b319ccf52e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3-n/BestPossibleStrategy.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3-n/ManualStrategy.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3-n/indicators.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3-n/marketsimcode.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3-n/util.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/BagLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/BestPossibleStrategy.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/ML_based.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/ManualStrategy.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/RTLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/indicators.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/marketsimcode.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/order_manual.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/order_manual_strategy.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/price/prices.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/rule_based.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mc3-p3/util.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/QLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/grade_robot_qlearning.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testqlearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world01.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world02.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world03.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world04.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world05.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world06.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world07.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world08.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world09.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/qlearning_robot/testworlds/world10.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/BagLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/ML_based.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/QLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/RTLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner_RT.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/grade_strategy_learner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/indicators.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/marketsimcode.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/rule_based.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/util.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/StrategyLearner.py" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -58,8 +17,8 @@
       <file leaf-file-name="StrategyLearner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3000">
-              <caret line="200" column="21" lean-forward="false" selection-start-line="200" selection-start-column="21" selection-end-line="200" selection-end-column="21" />
+            <state relative-caret-position="-1562">
+              <caret line="15" column="28" lean-forward="false" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
               <folding>
                 <element signature="e#74#95#0" expanded="true" />
               </folding>
@@ -1078,8 +1037,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3000">
-          <caret line="200" column="21" lean-forward="false" selection-start-line="200" selection-start-column="21" selection-end-line="200" selection-end-column="21" />
+        <state relative-caret-position="-1562">
+          <caret line="15" column="28" lean-forward="false" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
           <folding>
             <element signature="e#74#95#0" expanded="true" />
           </folding>
