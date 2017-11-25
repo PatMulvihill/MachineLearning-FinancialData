@@ -105,8 +105,9 @@ class StrategyLearner(object):
             state = p * 700 + train_states[0, 0]
             action = self.learner.querysetstate(state)
             total_days = train_states.shape[0]
+            prev_val = sv
             for days in range(1, total_days):
-                
+
                 if p == 0 and action == 1:
                     p = 1
                     Qvalue[days, 0] = -1000
@@ -132,8 +133,9 @@ class StrategyLearner(object):
                     Qvalue[days, 0] = Qvalue[days - 1, 0]
                     Qvalue[days, 2] = Qvalue[days - 1, 2]
 
-                Qvalue[days, 3] = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
-                reward = Qvalue[days, 3] / Qvalue[days - 1, 3] - 1
+                curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                reward = curr_val / prev_val - 1
+                prev_val = curr_val
                 state = p * 1000 + train_states[days, 0]
                 action = self.learner.query(state, reward)
 
