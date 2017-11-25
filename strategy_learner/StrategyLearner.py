@@ -92,12 +92,12 @@ class StrategyLearner(object):
                 if position == 0:
                     if action == 1:
                         position = 1
-                        Qframe[days, 0] = -200
-                        Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 200
+                        Qframe[days, 0] = -1000
+                        Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 1000
                     elif action == 2:
                         position = 2
-                        Qframe[days, 0] = 200
-                        Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 200
+                        Qframe[days, 0] = 1000
+                        Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 1000
                     else:
                         position = 0
                         Qframe[days, 0] = Qframe[days - 1, 0]
@@ -105,13 +105,13 @@ class StrategyLearner(object):
 
                 elif position == 1 and action == 2:
                     position = 2
-                    Qframe[days, 0] = 200
-                    Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 400
+                    Qframe[days, 0] = 1000
+                    Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 2000
 
                 elif position == 2 and action == 1:
                     position = 1
-                    Qframe[days, 0] = -200
-                    Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 400
+                    Qframe[days, 0] = -1000
+                    Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 2000
 
                 else:
                     position = position
@@ -177,20 +177,20 @@ class StrategyLearner(object):
             action = self.learner.querysetstate(state)
             if position == 0:
                 if action == 1:
-                    trades.values[days, :] = -200
+                    trades.values[days, :] = -1000
                     position = 1
                 elif action == 2:
-                    trades.values[days, :] = 200
+                    trades.values[days, :] = 1000
                     position = 2
                 else:
                     position = 0
 
             elif position == 1 and action == 2:
-                trades.values[days, :] = 400
+                trades.values[days, :] = 2000
                 position = 2
 
             elif position == 2 and action == 1:
-                trades.values[days, :] = -400
+                trades.values[days, :] = -2000
                 position = 1
 
             else:
