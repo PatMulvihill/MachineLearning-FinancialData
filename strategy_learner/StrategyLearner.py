@@ -68,7 +68,9 @@ class StrategyLearner(object):
         train_vol.fillna(method='bfill', inplace=True)
 
 
-        '''DISCRETIZE'''
+       # dis
+
+
         bins_bbp = np.linspace(train_bbp.ix[:, 0].min(), train_bbp.ix[:, 0].max(), 10)
         train_bbp.ix[:, 0] = np.digitize(train_bbp.ix[:, 0], bins_bbp) - 1
 
@@ -110,19 +112,23 @@ class StrategyLearner(object):
                         Qframe[days, 0] = 1000
                         Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 1000
                     else:
-                        position = 0
+
                         Qframe[days, 0] = Qframe[days - 1, 0]
                         Qframe[days, 2] = Qframe[days - 1, 2]
 
-                elif position == 1 and action == 2:
-                    position = 2
-                    Qframe[days, 0] = 1000
-                    Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 2000
+                elif position == 1:
+                    if action == 2:
+                        position = 2
+                        Qframe[days, 0] = 1000
+                        Qframe[days, 2] = Qframe[days - 1, 2] - Qframe[days, 1] * 2000
 
-                elif position == 2 and action == 1:
-                    position = 1
-                    Qframe[days, 0] = -1000
-                    Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 2000
+
+                elif position == 2:
+                    if action ==1:
+                        position = 1
+                        Qframe[days, 0] = -1000
+                        Qframe[days, 2] = Qframe[days - 1, 2] + Qframe[days, 1] * 2000
+
 
                 else:
                     position = position
@@ -138,9 +144,6 @@ class StrategyLearner(object):
             if round > 1000:
                 converged = True
 
-            # print Qframe
-
-            # this method should use the existing policy and test it against new data
 
     def testPolicy(self, symbol="IBM", \
                    sd=dt.datetime(2009, 1, 1), \
