@@ -59,14 +59,10 @@ class StrategyLearner(object):
         train_bbp = (prices - bottom_band) / (top_band - bottom_band)
         # turn sma into price/sma ratio
         train_P_SMA_ratio = prices / train_SMA
-
-        # caculate momentum
-        train_momentum = (prices / prices.copy().shift(14)) - 1
-
-
-
-        # discretize those indicators
-
+        train_daily_rets = (prices / prices.shift(1)) - 1
+        train_vol = pd.rolling_std(train_daily_rets, 15).fillna(method='bfill')
+        train_momentum = (prices / prices.copy().shift(15)) - 1
+        '''DISCRETIZE'''
         bins_bbp = np.linspace(train_bbp.ix[:, 0].min(), train_bbp.ix[:, 0].max(), 10)
         train_bbp.ix[:, 0] = np.digitize(train_bbp.ix[:, 0], bins_bbp) - 1
 
@@ -76,11 +72,15 @@ class StrategyLearner(object):
         bins_P_SMA_ratio = np.linspace(train_P_SMA_ratio.ix[:, 0].min(), train_P_SMA_ratio.ix[:, 0].max(), 10)
         train_P_SMA_ratio.ix[:, 0] = np.digitize(train_P_SMA_ratio.ix[:, 0], bins_P_SMA_ratio) - 1
 
+        bins_vol = np.linspace(train_vol.ix[:, 0].min(), train_vol.ix[:, 0].max(), 10)
+        train_vol.ix[:, 0] = np.digitize(train_vol.ix[:, 0], bins_vol) - 1
 
-        # strategy learner
+        train_indicator = pd.concat([train_bbp, train_momentum, train_vol],
+                                    keys=['Ind1', 'Ind2', 'Ind3'], axis=1)
 
-        train_states = train_bbp[symbol] * 50 + train_P_SMA_ratio[symbol] * 50
-        
+        train_states = train_indicator['Ind1'] * 100 + \
+                       train_indicator['Ind2'] * 10 + \
+                       train_indicator['Ind3']
 
         Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
@@ -132,7 +132,6 @@ class StrategyLearner(object):
                 state = position * 1000 + train_states[days, 0]
                 action = self.learner.query(state, reward)
             i += 1
-
     # this method should use the existing policy and test it against new data
     def testPolicy(self, symbol = "IBM", \
         sd=dt.datetime(2009,1,1), \
