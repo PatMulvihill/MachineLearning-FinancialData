@@ -87,12 +87,13 @@ class StrategyLearner(object):
         start = train_states.index[0]
         end = train_states.index[-1]
         dates = pd.date_range(start, end)
-        Qframe = pd.DataFrame(index=dates,
-                              columns=['Pos', 'Price', 'Cash', 'P_V'])
         train_states = train_states.values
-        Qframe.ix[:, 'Pos'] = 0
-        Qframe.ix[:, 'Price'] = prices.ix[:, symbol]
-        Qframe.ix[:, 'Cash'] = Qframe.ix[:, 'P_V'] = sv
+        Qframe = pd.DataFrame(index = dates)
+
+        Qframe['Pos'] = 0
+        Qframe['Price'] = prices.ix[:, symbol]
+        Qframe['Cash'] = sv
+        Qframe.ix['P_V'] = sv
         Qframe = Qframe.dropna().values
 
         converged = False
