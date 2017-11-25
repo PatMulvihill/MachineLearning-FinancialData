@@ -198,26 +198,25 @@ class StrategyLearner(object):
         bins_vol = np.linspace(test_vol.ix[:, 0].min(), test_vol.ix[:, 0].max(), 10)
         test_vol.ix[:, 0] = np.digitize(test_vol.ix[:, 0], bins_vol) - 1
 
-       
+
 
         test_states = test_bbp * 50 + test_P_SMA_ratio * 50 + test_momentum * 10 + test_vol
 
-        '''TEST'''
+
         test_states = test_states.values
         position = 0
 
         for days in range(1, test_states.size):
             state = position * 1000 + test_states[days - 1, 0]
             action = self.learner.querysetstate(state)
-            if position == 0:
-                if action == 1:
-                    trades.values[days, :] = -1000
-                    position = 1
-                elif action == 2:
-                    trades.values[days, :] = 1000
-                    position = 2
-                else:
-                    position = 0
+            if position == 0 and action ==1:
+
+                trades.values[days, :] = -1000
+                position = 1
+            elif position ==0 and action == 2:
+                trades.values[days, :] = 1000
+                position = 2
+
 
             elif position == 1 and action == 2:
                 trades.values[days, :] = 2000
@@ -227,8 +226,6 @@ class StrategyLearner(object):
                 trades.values[days, :] = -2000
                 position = 1
 
-            else:
-                position = position
 
         if self.verbose: print type(trades)  # it better be a DataFrame!
         if self.verbose: print trades
