@@ -70,18 +70,7 @@ class StrategyLearner(object):
 
        # dis
 
-
-        bins_bbp = np.linspace(train_bbp.ix[:, 0].min(), train_bbp.ix[:, 0].max(), 10)
-        train_bbp.ix[:, 0] = np.digitize(train_bbp.ix[:, 0], bins_bbp) - 1
-
-        bins_momentum = np.linspace(train_momentum.ix[:, 0].min(), train_momentum.ix[:, 0].max(), 10)
-        train_momentum.ix[:, 0] = np.digitize(train_momentum.ix[:, 0], bins_momentum) - 1
-
-        bins_P_SMA_ratio = np.linspace(train_P_SMA_ratio.ix[:, 0].min(), train_P_SMA_ratio.ix[:, 0].max(), 10)
-        train_P_SMA_ratio.ix[:, 0] = np.digitize(train_P_SMA_ratio.ix[:, 0], bins_P_SMA_ratio) - 1
-
-        bins_vol = np.linspace(train_vol.ix[:, 0].min(), train_vol.ix[:, 0].max(), 10)
-        train_vol.ix[:, 0] = np.digitize(train_vol.ix[:, 0], bins_vol) - 1
+        train_P_SMA_ratio, train_bbp, train_momentum, train_vol = self.discritize(train_P_SMA_ratio, train_bbp, train_momentum, train_vol)
 
         train_states = train_bbp * 50 + train_P_SMA_ratio * 50 + train_momentum * 10 + train_vol
         start = train_states.index[0]
@@ -184,8 +173,6 @@ class StrategyLearner(object):
         test_vol.fillna(method='bfill', inplace=True)
 
 
-
-        '''DISCRETIZE'''
         bins_bbp = np.linspace(test_bbp.ix[:, 0].min(), test_bbp.ix[:, 0].max(), 10)
         test_bbp.ix[:, 0] = np.digitize(test_bbp.ix[:, 0], bins_bbp) - 1
 
@@ -197,7 +184,6 @@ class StrategyLearner(object):
 
         bins_vol = np.linspace(test_vol.ix[:, 0].min(), test_vol.ix[:, 0].max(), 10)
         test_vol.ix[:, 0] = np.digitize(test_vol.ix[:, 0], bins_vol) - 1
-
 
 
         test_states = test_bbp * 50 + test_P_SMA_ratio * 50 + test_momentum * 10 + test_vol
@@ -231,6 +217,20 @@ class StrategyLearner(object):
         if self.verbose: print trades
         if self.verbose: print prices_all
         return trades
+
+    def discritize(self,train_P_SMA_ratio,train_bbp,train_momentum, train_vol ):
+        bins_bbp = np.linspace(train_bbp.ix[:, 0].min(), train_bbp.ix[:, 0].max(), 10)
+        train_bbp.ix[:, 0] = np.digitize(train_bbp.ix[:, 0], bins_bbp) - 1
+
+        bins_momentum = np.linspace(train_momentum.ix[:, 0].min(), train_momentum.ix[:, 0].max(), 10)
+        train_momentum.ix[:, 0] = np.digitize(train_momentum.ix[:, 0], bins_momentum) - 1
+
+        bins_P_SMA_ratio = np.linspace(train_P_SMA_ratio.ix[:, 0].min(), train_P_SMA_ratio.ix[:, 0].max(), 10)
+        train_P_SMA_ratio.ix[:, 0] = np.digitize(train_P_SMA_ratio.ix[:, 0], bins_P_SMA_ratio) - 1
+
+        bins_vol = np.linspace(train_vol.ix[:, 0].min(), train_vol.ix[:, 0].max(), 10)
+        train_vol.ix[:, 0] = np.digitize(train_vol.ix[:, 0], bins_vol) - 1
+        return train_P_SMA_ratio,train_bbp,train_momentum, train_vol
 
     if __name__ == "__main__":
         print "One does not simply think up a strategy"
