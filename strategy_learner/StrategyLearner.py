@@ -8,7 +8,7 @@ import util as ut
 import random
 import QLearner as ql
 import numpy as np
-import indicators as ind
+
 
 class StrategyLearner(object):
 
@@ -48,8 +48,20 @@ class StrategyLearner(object):
         dyna = 0, \
         verbose = False)
 
-        train_SMA, train_P_SMA_ratio, train_bbp, top_band, bottom_band, train_momentum = ind.caculate(symbol, sd,
-                                                                    ed)
+        train_SMA= prices.rolling(21, 21).mean()
+        train_SMA.fillna(method='ffill', inplace=True)
+        train_SMA.fillna(method='bfill', inplace=True)
+
+        # caculate bbp
+        rolling_std = prices.rolling(window=21, min_periods=21).std()
+        top_band = train_SMA + (2 * rolling_std)
+        bottom_band = train_SMA - (2 * rolling_std)
+        train_bbp = (prices - bottom_band) / (top_band - bottom_band)
+        # turn sma into price/sma ratio
+        train_P_SMA_ratio = prices / train_SMA
+
+        # caculate momentum
+        train_momentum = (prices / prices.copy().shift(21)) - 1
 
         train_daily_rets = (prices / prices.shift(1)) - 1
         train_vol = pd.rolling_std(train_daily_rets, 21).fillna(method='bfill')
