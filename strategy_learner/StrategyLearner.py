@@ -84,9 +84,9 @@ class StrategyLearner(object):
         train_indicator = pd.concat([train_bbp, train_momentum, train_vol],
                                     keys=['Ind1', 'Ind2', 'Ind3'], axis=1)
 
-        train_states = train_indicator['Ind1'] * 100 + \
-                       train_indicator['Ind2'] * 10 + \
-                       train_indicator['Ind3']
+        train_states = train_bbp[symbol] * 100 + \
+                       train_momentum[symbol] * 10 + \
+                       train_vol[symbol]
 
         Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
