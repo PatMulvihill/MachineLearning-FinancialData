@@ -80,6 +80,7 @@ class StrategyLearner(object):
         # strategy learner
 
         train_states = train_bbp[symbol] * 50 + train_P_SMA_ratio[symbol] * 50
+        
 
         Qframe = pd.DataFrame(index=pd.date_range(train_states.index[0], train_states.index[-1]),
                               columns=['Pos', 'Price', 'Cash', 'P_V'])
