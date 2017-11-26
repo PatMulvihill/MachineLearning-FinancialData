@@ -69,7 +69,7 @@ class StrategyLearner(object):
 
         train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_v_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-        strategy = train_bbp_n * 100 + train_momentum_n * 10 + train_v_n
+        strategy = train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_v_n
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
@@ -151,50 +151,48 @@ class StrategyLearner(object):
         test_SMA = prices.rolling(window=14, min_periods=14).mean()
         test_SMA.fillna(method='ffill', inplace=True)
         test_SMA.fillna(method='bfill', inplace=True)
-        test_P_SMA_ratio = prices / test_SMA
-        test_rolling_std = prices.rolling(window=14, min_periods=14).std()
-        top_band = test_SMA + (2 * test_rolling_std)
-        bottom_band = test_SMA - (2 * test_rolling_std)
+
+        test_std = prices.rolling(window=14, min_periods=14).std()
+        top_band = test_SMA + (2 * test_std)
+        bottom_band = test_SMA - (2 * test_std)
         test_bbp = (prices - bottom_band) / (top_band - bottom_band)
         # turn sma into price/sma ratio
-        test_sma_ratio = prices / test_SMA
+        test_SMAPrice_ratio = prices / test_SMA
 
         # caculate momentum
         test_momentum = (prices / prices.copy().shift(14)) - 1
 
         test_daily_rets = (prices / prices.shift(1)) - 1
-        test_vol = pd.rolling_std(test_daily_rets, 14)
-        test_vol.fillna(method='ffill', inplace=True)
-        test_vol.fillna(method='bfill', inplace=True)
+        test_size = pd.rolling_std(test_daily_rets, 14)
+        test_size.fillna(method='ffill', inplace=True)
+        test_size.fillna(method='bfill', inplace=True)
 
-        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_vol_n = self.discritize(test_P_SMA_ratio,test_bbp,test_momentum, test_vol)
-
-
-        test_states = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_vol_n
+        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_vol_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
 
-        test_states = test_states.values
-        position = 0
+        test_strategy = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_vol_n
 
-        for days in range(1, test_states.size):
-            state = position * 1000 + test_states[days - 1, 0]
+        test_strategy_states = test_strategy.values
+        p = 0
+        test_total_days = test_strategy_states.size
+        for i in range(1, test_total_days):
+            state = test_strategy_states[i - 1, 0]
             action = self.learner.querysetstate(state)
-            if position == 0 and action ==1:
+            if p == 0 and action ==1:
 
-                trades.values[days, :] = -1000
-                position = 1
-            elif position ==0 and action == 2:
-                trades.values[days, :] = 1000
-                position = 2
+                trades.values[i, :] = -1000
+                p = 1
+            elif p ==0 and action == 2:
+                trades.values[i, :] = 1000
+                p = 2
 
+            elif p == 1 and action == 2:
+                trades.values[i, :] = 2000
+                p = 2
 
-            elif position == 1 and action == 2:
-                trades.values[days, :] = 2000
-                position = 2
-
-            elif position == 2 and action == 1:
-                trades.values[days, :] = -2000
-                position = 1
+            elif p == 2 and action == 1:
+                trades.values[i, :] = -2000
+                p = 1
 
 
         if self.verbose: print type(trades)  # it better be a DataFrame!
