@@ -87,7 +87,7 @@ class StrategyLearner(object):
         while not converged:
 
             p = 0
-            state = p * 700 + strategy_states[0, 0]
+            state =  strategy_states[0, 0]
             action = self.learner.querysetstate(state)
             total_days = strategy_states.shape[0]
             prev_val = sv
@@ -126,7 +126,7 @@ class StrategyLearner(object):
 
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state = p * 700 + strategy_states[i, 0]
+                state =  strategy_states[i, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
