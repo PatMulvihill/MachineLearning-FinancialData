@@ -15,7 +15,7 @@ class StrategyLearner(object):
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact
-        self.learner = ql.QLearner(num_states=3000, \
+        self.learner = ql.QLearner(num_states=4000, \
                                    num_actions=3, \
                                    alpha=0.2, \
                                    gamma=0.9, \
@@ -173,7 +173,7 @@ class StrategyLearner(object):
         p = 0
         test_total_dates = test_strategy_states.size
         for i in range(1, test_total_dates):
-            state = p *1000 + test_strategy_states[ i - 1, 0]
+            state = test_strategy_states[ i - 1, 0] + p *1000 
             action = self.learner.querysetstate(state)
             status = 0
             if p == 0 and action == 1:
