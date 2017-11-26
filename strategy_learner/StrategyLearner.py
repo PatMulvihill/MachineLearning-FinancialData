@@ -15,6 +15,14 @@ class StrategyLearner(object):
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact
+        self.learner = ql.QLearner(num_states=3000, \
+                                   num_actions=3, \
+                                   alpha=0.2, \
+                                   gamma=0.9, \
+                                   rar=0.5, \
+                                   radr=0.99, \
+                                   dyna=0, \
+                                   verbose=False)
 
     # this method should create a QLearner, and train it for trading
     def addEvidence(self, symbol = "IBM", \
@@ -39,14 +47,7 @@ class StrategyLearner(object):
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        self.learner = ql.QLearner(num_states=3000, \
-                                   num_actions=3, \
-                                   alpha=0.2, \
-                                   gamma=0.9, \
-                                   rar=0.5, \
-                                   radr=0.99, \
-                                   dyna=0, \
-                                   verbose=False)
+
 
         train_SMA = prices.rolling(window=14, min_periods=14).mean()
         train_SMA.fillna(method='ffill', inplace=True)
@@ -174,7 +175,7 @@ class StrategyLearner(object):
         p = 0
         test_total_dates = test_strategy_states.size
         for i in range(1, test_total_dates):
-            state = p *800 + test_strategy_states[ i - 1, 0]
+            state = p *1000 + test_strategy_states[ i - 1, 0]
             action = self.learner.querysetstate(state)
             if p == 0 and action == 1:
 
