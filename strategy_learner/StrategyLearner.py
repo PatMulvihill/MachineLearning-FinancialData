@@ -39,7 +39,7 @@ class StrategyLearner(object):
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        self.learner = ql.QLearner(num_states=1000, \
+        self.learner = ql.QLearner(num_states=3000, \
                                    num_actions=3, \
                                    alpha=0.2, \
                                    gamma=0.9, \
@@ -130,7 +130,7 @@ class StrategyLearner(object):
                 action = self.learner.query(state, reward)
 
             round += 1
-            if round > 1000:
+            if round > 1300:
                 converged = True
 
 
