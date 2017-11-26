@@ -39,7 +39,7 @@ class StrategyLearner(object):
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        self.learner = ql.QLearner(num_states=3000, \
+        self.learner = ql.QLearner(num_states=1000, \
                                    num_actions=3, \
                                    alpha=0.2, \
                                    gamma=0.9, \
@@ -126,7 +126,7 @@ class StrategyLearner(object):
 
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state =  strategy_states[i, 0]
+                state = strategy_states[i, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
