@@ -68,7 +68,7 @@ class StrategyLearner(object):
 
         train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-        strategy =   train_momentum_n * 10  + train_bbp_n * 100  + train_size_n
+        strategy =   train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_size_n
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
@@ -171,9 +171,9 @@ class StrategyLearner(object):
         test_strategy = test_bbp_n * 100 + test_momentum_n * 10 + test_size_n
         test_strategy_states = test_strategy.values
         p = 0
-        test_total_dates = test_strategy_states.size + p*1000
+        test_total_dates = test_strategy_states.size
         for i in range(1, test_total_dates):
-            state = test_strategy_states[ i - 1, 0]
+            state = test_strategy_states[ i - 1, 0] + p *1000
             action = self.learner.querysetstate(state)
             status = 0
             if p == 0 and action == 1:
