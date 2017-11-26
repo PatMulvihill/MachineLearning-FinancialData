@@ -171,28 +171,28 @@ class StrategyLearner(object):
 
         test_strategy = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_size_n
 
-        test_states = test_strategy.values
-        position = 0
+        test_strategy_states = test_strategy.values
+        p = 0
 
-        for days in range(1, test_states.size):
-            state = position * 1000 + test_states[days - 1, 0]
+        for days in range(1, test_strategy_states.size):
+            state = p * 1000 + test_strategy_states[days - 1, 0]
             action = self.learner.querysetstate(state)
-            if position == 0 and action == 1:
+            if p == 0 and action == 1:
 
                 trades.values[days, :] = -1000
-                position = 1
-            elif position == 0 and action == 2:
+                p = 1
+            elif p == 0 and action == 2:
                 trades.values[days, :] = 1000
-                position = 2
+                p = 2
 
 
-            elif position == 1 and action == 2:
+            elif p == 1 and action == 2:
                 trades.values[days, :] = 2000
-                position = 2
+                p = 2
 
-            elif position == 2 and action == 1:
+            elif p == 2 and action == 1:
                 trades.values[days, :] = -2000
-                position = 1
+                p = 1
 
         if self.verbose: print type(trades)  # it better be a DataFrame!
         if self.verbose: print trades
