@@ -73,7 +73,7 @@ class StrategyLearner(object):
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
-        strategy_states = strategy.values
+
         df = pd.DataFrame(index = dates)
 
         df['positions'] = 0
@@ -87,9 +87,9 @@ class StrategyLearner(object):
         while not converged:
 
             p = 0
-            state =  strategy_states[0, 0]
+            state =  strategy.ix[0, 0]
             action = self.learner.querysetstate(state)
-            total_days = strategy_states.shape[0]
+            total_days = strategy.size
             prev_val = sv
             for i in range(1, total_days):
 
@@ -126,7 +126,7 @@ class StrategyLearner(object):
 
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state = strategy_states[i, 0]
+                state = strategy.ix[i, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
