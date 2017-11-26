@@ -15,7 +15,7 @@ class StrategyLearner(object):
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact
-        self.learner = ql.QLearner(num_states=4000, \
+        self.learner = ql.QLearner(num_states=300, \
                                    num_actions=3, \
                                    alpha=0.2, \
                                    gamma=0.9, \
@@ -68,7 +68,7 @@ class StrategyLearner(object):
 
         train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-        strategy = train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_size_n
+        strategy =  train_size_n + train_bbp_n * 10
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
@@ -86,7 +86,7 @@ class StrategyLearner(object):
         while not converged:
 
             p = 0
-            state =  strategy_states[0, 0]
+            state =  strategy_states[0, 0] + p*100
             action = self.learner.querysetstate(state)
             total_days = strategy_states.shape[0]
             prev_val = sv
@@ -125,7 +125,7 @@ class StrategyLearner(object):
 
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state = strategy_states[i, 0]
+                state = strategy_states[i, 0] + p*100
                 action = self.learner.query(state, reward)
 
             round += 1
@@ -168,12 +168,12 @@ class StrategyLearner(object):
 
         test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_strategy = test_bbp_n * 100 + test_momentum_n * 10 + test_size_n
+        test_strategy = test_size_n + test_bbp_n * 10
         test_strategy_states = test_strategy.values
         p = 0
         test_total_dates = test_strategy_states.size
         for i in range(1, test_total_dates):
-            state = test_strategy_states[ i - 1, 0] + p *800
+            state = test_strategy_states[ i - 1, 0] + p *100
             action = self.learner.querysetstate(state)
             status = 0
             if p == 0 and action == 1:
