@@ -27,8 +27,8 @@
       <file leaf-file-name="StrategyLearner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
-              <caret line="191" column="36" lean-forward="false" selection-start-line="191" selection-start-column="36" selection-end-line="191" selection-end-column="36" />
+            <state relative-caret-position="200">
+              <caret line="175" column="61" lean-forward="false" selection-start-line="175" selection-start-column="61" selection-end-line="175" selection-end-column="61" />
               <folding>
                 <element signature="e#74#95#0" expanded="true" />
               </folding>
@@ -1028,8 +1028,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="191" column="36" lean-forward="false" selection-start-line="191" selection-start-column="36" selection-end-line="191" selection-end-column="36" />
+        <state relative-caret-position="200">
+          <caret line="175" column="61" lean-forward="false" selection-start-line="175" selection-start-column="61" selection-end-line="175" selection-end-column="61" />
           <folding>
             <element signature="e#74#95#0" expanded="true" />
           </folding>

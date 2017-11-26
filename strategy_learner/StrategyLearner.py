@@ -88,7 +88,7 @@ class StrategyLearner(object):
             p = 0
             state =  strategy_states[0, 0]
             action = self.learner.querysetstate(state)
-            total_days = strategy_states.shape[0]
+            total_days = strategy_states.shape[0] + p*1000
             prev_val = sv
             for i in range(1, total_days):
 
@@ -173,7 +173,7 @@ class StrategyLearner(object):
         p = 0
         test_total_dates = test_strategy_states.size
         for i in range(1, test_total_dates):
-            state = p *1000 + test_strategy_states[ i - 1, 0]
+            state = test_strategy_states[ i - 1, 0] + p *1000
             action = self.learner.querysetstate(state)
             if p == 0 and action == 1:
 
@@ -182,7 +182,6 @@ class StrategyLearner(object):
             elif p == 0 and action == 2:
                 trades.ix[i, symbol] = 1000
                 p = 2
-
 
             elif p == 1 and action == 2:
                 trades.ix[i, symbol] = 2000
