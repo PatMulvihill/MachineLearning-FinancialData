@@ -94,34 +94,32 @@ class StrategyLearner(object):
             for i in range(1, total_days):
 
                 if p == 0 and action == 1:
-
-
                     train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 1000
                     curr_val = train_array[i, 2] -1000 * train_array[i, 1]
+                    train_array[i,0] = -1000
                     p = 1
                 elif p==0 and action == 2:
 
-                    train_array[i, 0] = 1000
                     train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000
-                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
+                    curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
+                    train_array[i, 0] = 1000
                     p = 2
 
                 elif p == 1 and action == 2:
 
-                    train_array[i, 0] = 1000
                     train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000
-                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
+                    curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
+                    train_array[i, 0] = 1000
                     p = 2
 
                 elif p == 2 and action == 1:
 
-                    train_array[i, 0] = -1000
                     train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000
-                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
+                    curr_val = train_array[i, 2] -1000 * train_array[i, 1]
+                    train_array[i, 0] = -1000
                     p = 1
 
                 else:
-
                     train_array[i, 0] = train_array[i - 1, 0]
                     train_array[i, 2] = train_array[i - 1, 2]
                     curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
