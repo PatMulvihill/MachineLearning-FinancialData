@@ -68,7 +68,7 @@ class StrategyLearner(object):
 
         train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-        strategy = train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_size_n
+        strategy = train_SMAPrice_ratio_n * 5 + train_bbp_n * 100 + train_momentum_n * 5 + train_size_n
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
@@ -168,7 +168,7 @@ class StrategyLearner(object):
 
         test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_strategy =test_SMA_ratio_n * 5 + test_bbp_n * 90 + test_momentum_n * 5 + test_size_n
+        test_strategy =test_SMA_ratio_n * 5 + test_bbp_n * 100 + test_momentum_n * 5 + test_size_n
         test_strategy_states = test_strategy.values
         p = 0
         test_total_dates = test_strategy_states.size
@@ -177,20 +177,20 @@ class StrategyLearner(object):
             action = self.learner.querysetstate(state)
             if p == 0 and action == 1:
 
-                trades.ix[i, symbol] = -1000
+                status = -1000
                 p = 1
             elif p == 0 and action == 2:
-                trades.ix[i, symbol] = 1000
+                status = 1000
                 p = 2
 
             elif p == 1 and action == 2:
-                trades.ix[i, symbol] = 2000
+                status = 2000
                 p = 2
 
             elif p == 2 and action == 1:
-                trades.ix[i, symbol] = -2000
+                status = -2000
                 p = 1
-
+            trades.ix[i, symbol] = status
         if self.verbose: print type(trades)  # it better be a DataFrame!
         if self.verbose: print trades
         if self.verbose: print prices_all
