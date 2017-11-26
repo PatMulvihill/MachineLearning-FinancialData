@@ -51,40 +51,37 @@ class StrategyLearner(object):
         train_SMA = prices.rolling(window=14, min_periods=14).mean()
         train_SMA.fillna(method='ffill', inplace=True)
         train_SMA.fillna(method='bfill', inplace=True)
-        train_P_SMA_ratio = prices / train_SMA
-        train_rolling_std = prices.rolling(window=14, min_periods=14).std()
-        top_band = train_SMA + (2 * train_rolling_std)
-        bottom_band = train_SMA - (2 * train_rolling_std)
+
+        train_std = prices.rolling(window=14, min_periods=14).std()
+        top_band = train_SMA + (2 * train_std)
+        bottom_band = train_SMA - (2 * train_std)
         train_bbp = (prices - bottom_band) / (top_band - bottom_band)
         # turn sma into price/sma ratio
-        train_sma_ratio = prices / train_SMA
+        train_SMAPrice_ratio = prices / train_SMA
 
         # caculate momentum
         train_momentum = (prices / prices.copy().shift(14)) - 1
 
         train_daily_rets = (prices / prices.shift(1)) - 1
-        train_vol = pd.rolling_std(train_daily_rets, 14)
-        train_vol.fillna(method='ffill', inplace=True)
-        train_vol.fillna(method='bfill', inplace=True)
+        train_size = pd.rolling_std(train_daily_rets, 14)
+        train_size.fillna(method='ffill', inplace=True)
+        train_size.fillna(method='bfill', inplace=True)
 
+        train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_v_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-       # dis
-
-        train_P_SMA_ratio, train_bbp, train_momentum, train_vol = self.discritize(train_P_SMA_ratio, train_bbp, train_momentum, train_vol)
-
-        train_states = train_bbp * 50 + train_P_SMA_ratio * 50 + train_momentum * 10 + train_vol
-        start = train_states.index[0]
-        end = train_states.index[-1]
+        strategy = train_bbp_n * 50 + train_SMAPrice_ratio_n * 50 + train_momentum_n * 10 + train_v_n
+        start = strategy.index[0]
+        end = strategy.index[-1]
         dates = pd.date_range(start, end)
-        train_states = train_states.values
-        Qframe = pd.DataFrame(index = dates)
+        train_states = strategy.values
+        df = pd.DataFrame(index = dates)
 
-        Qframe['Pos'] = 0
-        Qframe['Price'] = prices.ix[start:end, symbol]
-        Qframe['Cash'] = sv
-        Qframe.fillna(method='ffill', inplace=True)
-        Qframe.fillna(method='bfill', inplace=True)
-        Qvalue = Qframe.values
+        df['Pos'] = 0
+        df['Price'] = prices.ix[start:end, symbol]
+        df['Cash'] = sv
+        df.fillna(method='ffill', inplace=True)
+        df.fillna(method='bfill', inplace=True)
+        Qvalue = df.values
         converged = False
         round = 0
         while not converged:
@@ -230,6 +227,9 @@ class StrategyLearner(object):
         max4 = vol.ix[:, 0].max()
         vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(min4, max4, 10)) - 1
         return SMA_ratio_n,bbp_n,momentum_n, vol_n
+
+    def author(self):
+        return 'lwang496'
 
     if __name__ == "__main__":
         print "One does not simply think up a strategy"
