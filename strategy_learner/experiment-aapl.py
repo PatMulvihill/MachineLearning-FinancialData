@@ -65,13 +65,31 @@ for i in range(0, benchmark_frame.shape[0]):
 
 del benchmark_frame['SPY']
 del benchmark_frame['AAPL']
+bench_daily_rets = (benchmark_frame / benchmark_frame.shift(1)) - 1
+bench_daily_rets = bench_daily_rets[1:]
+bench_cr = (benchmark_frame.ix[-1] / benchmark_frame.ix[0]) - 1
+bench_adr = bench_daily_rets.mean()
+bench_sddr = bench_daily_rets.std()
 
+print "Benchmark Volatility (stdev of daily returns):", bench_sddr
+print "Benchmark Average Daily Return:", bench_adr
+print "Benchmark Cumulative Return:", bench_cr
 
 
 strategy_portvals = mk.compute_portvals(strategy_order_n, start_val=100000, commission=0, impact=0)
 strategy_portvals.fillna(method='ffill', inplace=True)
 strategy_portvals.fillna(method='bfill', inplace=True)
 
+
+s_daily_rets = (strategy_portvals / strategy_portvals.shift(1)) - 1
+s_daily_rets = s_daily_rets[1:]
+s_bench_cr = (strategy_portvals.ix[-1] / strategy_portvals.ix[0]) - 1
+s_bench_adr = s_daily_rets.mean()
+s_bench_sddr = s_daily_rets.std()
+
+print "s Volatility (stdev of daily returns):", s_bench_sddr
+print "s Average Daily Return:", s_bench_adr
+print "s Cumulative Return:", s_bench_cr
 
 final_frame = pd.concat([ strategy_portvals, benchmark_frame], axis=1)
 final_frame.columns = [ 'StrategyLearner','Benchmark']
