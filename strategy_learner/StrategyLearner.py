@@ -143,8 +143,8 @@ class StrategyLearner(object):
         # your code should return the same sort of data
         dates = pd.date_range(sd, ed)
         prices_all = ut.get_data([symbol], dates)  # automatically adds SPY
-        prices = prices_all[[symbol]]
-        trades = prices.copy()
+        prices = prices_all[[symbol,]]
+        trades = prices_all[[symbol, ]]  # only portfolio symbols
         trades.values[:, :] = 0
         trades_SPY = prices_all['SPY']  # only SPY, for comparison later
 
