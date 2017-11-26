@@ -175,7 +175,7 @@ class StrategyLearner(object):
         p = 0
         test_total_dates = test_strategy_states.size
         for i in range(1, test_total_dates):
-            state = p * 1000 + test_strategy_states[ i - 1, 0]
+            state = test_strategy_states[ i - 1, 0]
             action = self.learner.querysetstate(state)
             if p == 0 and action == 1:
 
