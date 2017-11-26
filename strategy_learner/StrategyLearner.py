@@ -69,7 +69,7 @@ class StrategyLearner(object):
 
         train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_v_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-        strategy = train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_v_n
+        strategy = train_bbp_n * 100 + train_momentum_n * 10 + train_v_n
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
