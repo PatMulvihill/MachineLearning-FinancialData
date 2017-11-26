@@ -47,8 +47,6 @@ class StrategyLearner(object):
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-
-
         train_SMA = prices.rolling(window=14, min_periods=14).mean()
         train_SMA.fillna(method='ffill', inplace=True)
         train_SMA.fillna(method='bfill', inplace=True)
@@ -179,7 +177,7 @@ class StrategyLearner(object):
             action = self.learner.querysetstate(state)
             if p == 0 and action == 1:
 
-                trades.values[i, :] = -1000
+                trades.ix[i, symbol] = -1000
                 p = 1
             elif p == 0 and action == 2:
                 trades.values[i, :] = 1000
