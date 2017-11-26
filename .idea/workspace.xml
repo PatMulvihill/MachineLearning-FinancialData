@@ -27,8 +27,8 @@
       <file leaf-file-name="StrategyLearner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="170" column="85" lean-forward="false" selection-start-line="170" selection-start-column="85" selection-end-line="170" selection-end-column="85" />
+            <state relative-caret-position="406">
+              <caret line="182" column="40" lean-forward="true" selection-start-line="182" selection-start-column="40" selection-end-line="182" selection-end-column="40" />
               <folding>
                 <element signature="e#74#95#0" expanded="true" />
               </folding>
@@ -155,6 +155,7 @@
       <find>trade</find>
       <find>addev</find>
       <find>frame</find>
+      <find>self.lear</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -1023,8 +1024,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="170" column="85" lean-forward="false" selection-start-line="170" selection-start-column="85" selection-end-line="170" selection-end-column="85" />
+        <state relative-caret-position="406">
+          <caret line="182" column="40" lean-forward="true" selection-start-line="182" selection-start-column="40" selection-end-line="182" selection-end-column="40" />
           <folding>
             <element signature="e#74#95#0" expanded="true" />
           </folding>
