@@ -169,7 +169,7 @@ class StrategyLearner(object):
 
         test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_strategy = test_SMA_ratio_n * 100 + test_bbp_n * 10 + test_momentum_n * 10 + test_size_n
+        test_strategy = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_size_n
         test_strategy_states = test_strategy.values
         p = 0
         test_total_dates = test_strategy_states.size
