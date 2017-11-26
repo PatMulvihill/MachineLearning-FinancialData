@@ -180,16 +180,16 @@ class StrategyLearner(object):
                 trades.ix[i, symbol] = -1000
                 p = 1
             elif p == 0 and action == 2:
-                trades.values[i, :] = 1000
+                trades.ix[i, symbol] = 1000
                 p = 2
 
 
             elif p == 1 and action == 2:
-                trades.values[i, :] = 2000
+                trades.ix[i, symbol] = 2000
                 p = 2
 
             elif p == 2 and action == 1:
-                trades.values[i, :] = -2000
+                trades.ix[i, symbol] = -2000
                 p = 1
 
         if self.verbose: print type(trades)  # it better be a DataFrame!
