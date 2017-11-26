@@ -88,7 +88,7 @@ class StrategyLearner(object):
             p = 0
             state =  strategy_states[0, 0]
             action = self.learner.querysetstate(state)
-            total_days = strategy_states.shape[0] + p*1000
+            total_days = strategy_states.shape[0]
             prev_val = sv
             for i in range(1, total_days):
 
@@ -168,7 +168,7 @@ class StrategyLearner(object):
 
         test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_strategy = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_size_n
+        test_strategy = test_bbp_n * 100 + test_momentum_n * 10 + test_size_n
         test_strategy_states = test_strategy.values
         p = 0
         test_total_dates = test_strategy_states.size
