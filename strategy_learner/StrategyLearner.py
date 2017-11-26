@@ -73,7 +73,7 @@ class StrategyLearner(object):
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
-
+        strategy_states = strategy.values
         df = pd.DataFrame(index = dates)
 
         df['positions'] = 0
@@ -87,9 +87,9 @@ class StrategyLearner(object):
         while not converged:
 
             p = 0
-            state =  strategy.ix[0, 0]
+            state =  strategy_states[0, 0]
             action = self.learner.querysetstate(state)
-            total_days = strategy.size
+            total_days = strategy_states.shape[0]
             prev_val = sv
             for i in range(1, total_days):
 
@@ -126,7 +126,7 @@ class StrategyLearner(object):
 
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state = strategy.ix[i, 0]
+                state = strategy_states[i, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
@@ -144,7 +144,7 @@ class StrategyLearner(object):
         dates = pd.date_range(sd, ed)
         prices_all = ut.get_data([symbol], dates)  # automatically adds SPY
         prices = prices_all[[symbol]]
-        trades = prices.copy()  # only portfolio symbols
+        trades = prices_all[[symbol, ]]  # only portfolio symbols
         trades.values[:, :] = 0
         trades_SPY = prices_all['SPY']  # only SPY, for comparison later
 
@@ -172,27 +172,26 @@ class StrategyLearner(object):
         test_strategy = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_size_n
 
         test_strategy_states = test_strategy.values
-        position = 0
+        p = 0
         test_total_days = test_strategy_states.shape[0]
         for days in range(1, test_total_days):
-            state = position * 1000 + test_strategy_states[days - 1, 0]
+            state = p * 1000 + test_strategy[days - 1, 0]
             action = self.learner.querysetstate(state)
-            if position == 0 and action == 1:
+            if p == 0 and action == 1:
 
                 trades.values[days, :] = -1000
-                position = 1
-            elif position == 0 and action == 2:
+                p = 1
+            elif p == 0 and action == 2:
                 trades.values[days, :] = 1000
-                position = 2
+                p = 2
 
-
-            elif position == 1 and action == 2:
+            elif p == 1 and action == 2:
                 trades.values[days, :] = 2000
-                position = 2
+                p = 2
 
-            elif position == 2 and action == 1:
+            elif p == 2 and action == 1:
                 trades.values[days, :] = -2000
-                position = 1
+                p = 1
 
         if self.verbose: print type(trades)  # it better be a DataFrame!
         if self.verbose: print trades
@@ -204,8 +203,7 @@ class StrategyLearner(object):
         SMA_ratio_n = SMA_ratio
         min1 = SMA_ratio.ix[:, 0].min()
         max1 = SMA_ratio.ix[:, 0].max()
-        SMA_ratio_n.ix[:, 0] = np.digitize(SMA_ratio.ix[:, 0],
-                                           np.linspace(min1, max1, 10)) - 1
+        SMA_ratio_n.ix[:, 0] = np.digitize(SMA_ratio.ix[:, 0], np.linspace(min1, max1, 10)) - 1
         bbp_n = bbp
         min2 = bbp.ix[:, 0].min()
         max2 = bbp.ix[:, 0].max()
