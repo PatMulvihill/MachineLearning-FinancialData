@@ -73,62 +73,62 @@ class StrategyLearner(object):
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
-        train_states = strategy.values
+        strategy_states = strategy.values
         df = pd.DataFrame(index = dates)
 
-        df['Pos'] = 0
-        df['Price'] = prices.ix[start:end, symbol]
-        df['Cash'] = sv
+        df['positions'] = 0
+        df['values'] = prices.ix[start:end, symbol]
+        df['cash'] = sv
         df.fillna(method='ffill', inplace=True)
         df.fillna(method='bfill', inplace=True)
-        Qvalue = df.values
+        train_array = df.values
         converged = False
         round = 0
         while not converged:
 
             p = 0
-            state = p * 700 + train_states[0, 0]
+            state = p * 700 + strategy_states[0, 0]
             action = self.learner.querysetstate(state)
-            total_days = train_states.shape[0]
+            total_days = strategy_states.shape[0]
             prev_val = sv
-            for days in range(1, total_days):
+            for i in range(1, total_days):
 
                 if p == 0 and action == 1:
 
-                    Qvalue[days, 0] = -1000
-                    Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 1000
-                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+
+                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 1000
+                    curr_val = train_array[i, 2] -1000 * train_array[i, 1]
                     p = 1
                 elif p==0 and action == 2:
 
-                    Qvalue[days, 0] = 1000
-                    Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 1000
-                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    train_array[i, 0] = 1000
+                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000
+                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
                     p = 2
 
                 elif p == 1 and action == 2:
 
-                    Qvalue[days, 0] = 1000
-                    Qvalue[days, 2] = Qvalue[days - 1, 2] - Qvalue[days, 1] * 2000
-                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    train_array[i, 0] = 1000
+                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000
+                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
                     p = 2
 
                 elif p == 2 and action == 1:
 
-                    Qvalue[days, 0] = -1000
-                    Qvalue[days, 2] = Qvalue[days - 1, 2] + Qvalue[days, 1] * 2000
-                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    train_array[i, 0] = -1000
+                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000
+                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
                     p = 1
 
                 else:
 
-                    Qvalue[days, 0] = Qvalue[days - 1, 0]
-                    Qvalue[days, 2] = Qvalue[days - 1, 2]
-                    curr_val = Qvalue[days, 2] + Qvalue[days, 0] * Qvalue[days, 1]
+                    train_array[i, 0] = train_array[i - 1, 0]
+                    train_array[i, 2] = train_array[i - 1, 2]
+                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
 
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state = p * 700 + train_states[days, 0]
+                state = p * 700 + strategy_states[i, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
