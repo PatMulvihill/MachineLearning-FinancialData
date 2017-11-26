@@ -167,15 +167,15 @@ class StrategyLearner(object):
         test_size.fillna(method='ffill', inplace=True)
         test_size.fillna(method='bfill', inplace=True)
 
-        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_vol_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
+        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_states = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_vol_n
+        test_strategy = test_bbp_n * 50 + test_SMA_ratio_n * 50 + test_momentum_n * 10 + test_size_n
 
-        test_states = test_states.values
+        test_strategy_states = test_strategy.values
         position = 0
-
-        for days in range(1, test_states.size):
-            state = position * 1000 + test_states[days - 1, 0]
+        test_total_days = test_strategy_states.shape[0]
+        for days in range(1, test_total_days):
+            state = position * 1000 + test_strategy_states[days - 1, 0]
             action = self.learner.querysetstate(state)
             if position == 0 and action == 1:
 
