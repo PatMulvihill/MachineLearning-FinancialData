@@ -15,7 +15,7 @@ def author():
     return 'lwang496'
 
 def testPolicy( symbol, sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,12,31), sv = 100000):
-    lookback = 14
+    lookback = 21
     price = get_data([symbol], pd.date_range(sd,ed))
     price.fillna(method='ffill', inplace=True)
     price.fillna(method='bfill', inplace=True)

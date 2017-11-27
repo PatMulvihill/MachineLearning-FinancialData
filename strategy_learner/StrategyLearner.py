@@ -1,14 +1,14 @@
 """
 Template for implementing StrategyLearner  (c) 2016 Tucker Balch
 """
-'''Author: Lu Wang lwang496'''
 
 import datetime as dt
 import pandas as pd
 import util as ut
-import random
+import BagLearner as bag
+import RTLearner as rt
 import numpy as np
-import QLearner as ql
+import random
 
 class StrategyLearner(object):
 
@@ -16,14 +16,7 @@ class StrategyLearner(object):
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact
-        self.qlearner = ql.QLearner(num_states=3000, \
-                                   num_actions=3, \
-                                   alpha=0.2, \
-                                   gamma=0.9, \
-                                   rar=0.5, \
-                                   radr=0.99, \
-                                   dyna=0, \
-                                   verbose=False)
+        self.learner = bag.BagLearner(learner=rt.RTLearner, kwargs={"leaf_size": 6}, bags=10, boost = False, verbose = False)
 
     # this method should create a QLearner, and train it for trading
     def addEvidence(self, symbol = "IBM", \
@@ -31,11 +24,11 @@ class StrategyLearner(object):
         ed=dt.datetime(2009,1,1), \
         sv = 10000):
 
-
         # add your code to do learning here
+        lookback =21
 
         # example usage of the old backward compatible util function
-        syms = [symbol]
+        syms=[symbol]
         dates = pd.date_range(sd, ed)
         prices_all = ut.get_data(syms, dates)  # automatically adds SPY
         prices = prices_all[syms]  # only portfolio symbols
@@ -43,187 +36,126 @@ class StrategyLearner(object):
         if self.verbose: print prices
 
         # example use with new colname
-        volume_all = ut.get_data(syms, dates, colname="Volume")  # automatically adds SPY
+        volume_all = ut.get_data(syms, dates, colname = "Volume")  # automatically adds SPY
         volume = volume_all[syms]  # only portfolio symbols
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        train_SMA = prices.rolling(window=14, min_periods=14).mean()
-        train_SMA.fillna(method='ffill', inplace=True)
-        train_SMA.fillna(method='bfill', inplace=True)
 
-        train_std = prices.rolling(window=14, min_periods=14).std()
-        top_band = train_SMA + (2 * train_std)
-        bottom_band = train_SMA - (2 * train_std)
+        train_sma = prices.rolling(window=21, min_periods=21).mean()
+        train_sma.fillna(method='ffill', inplace=True)
+        train_sma.fillna(method='bfill', inplace=True)
+
+        train_rolling_std = prices.rolling(window=lookback, min_periods=lookback).std()
+        top_band = train_sma + (2 * train_rolling_std)
+        bottom_band = train_sma - (2 * train_rolling_std)
         train_bbp = (prices - bottom_band) / (top_band - bottom_band)
         # turn sma into price/sma ratio
-        train_SMAPrice_ratio = prices / train_SMA
+        train_sma_ratio = prices / train_sma
 
         # caculate momentum
-        train_momentum = (prices / prices.copy().shift(14)) - 1
-
-        train_daily_rets = (prices / prices.shift(1)) - 1
-        train_size = train_daily_rets.rolling(14, 14).std()
-        train_size.fillna(method='ffill', inplace=True)
-        train_size.fillna(method='bfill', inplace=True)
-
-        train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
-
-        strategy =  train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_size_n
-        start = strategy.index[0]
-        end = strategy.index[-1]
-        dates = pd.date_range(start, end)
-        strategy_states = strategy.values
-        df = pd.DataFrame(index = dates)
-
-        df['positions'] = 0
-        df['values'] = prices.ix[start:end, symbol]
-        df['cash'] = sv
-        df.fillna(method='ffill', inplace=True)
-        df.fillna(method='bfill', inplace=True)
-        train_array = df.values
-        converged = False
-        round = 0
-        while not converged:
-
-            p = 0
-            state =  strategy_states[0, 0]
-            action = self.qlearner.querysetstate(state)
-            total_days = strategy_states.shape[0]
-            prev_val = sv
-            for i in range(1, total_days):
-
-                if p == 0 and action == 1:
-                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 1000
-                    curr_val = train_array[i, 2] -1000 * train_array[i, 1]
-                    train_array[i,0] = -1000
-                    p = 1
-                elif p==0 and action == 2:
-
-                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000
-                    curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
-                    train_array[i, 0] = 1000
-                    p = 2
-
-                elif p == 1 and action == 2:
-
-                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000
-                    curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
-                    train_array[i, 0] = 1000
-                    p = 2
-
-                elif p == 2 and action == 1:
-
-                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000
-                    curr_val = train_array[i, 2] -1000 * train_array[i, 1]
-                    train_array[i, 0] = -1000
-                    p = 1
-
-                else:
-                    train_array[i, 0] = train_array[i - 1, 0]
-                    train_array[i, 2] = train_array[i - 1, 2]
-                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
-
-                reward = curr_val / prev_val - 1
-                prev_val = curr_val
-                state = strategy_states[i, 0]
-                action = self.qlearner.query(state, reward)
-
-            round += 1
-            if round > 1300:
-                converged = True
+        train_momentum = (prices / prices.copy().shift(lookback)) - 1
 
 
-    def testPolicy(self, symbol="IBM", \
-                   sd=dt.datetime(2009, 1, 1), \
-                   ed=dt.datetime(2010, 1, 1), \
-                   sv=100000):
+        df_ml = pd.concat([train_sma_ratio, train_bbp, train_momentum], axis=1)
+        df_ml.columns = ['SMA_P', 'bbp', 'momentum']
+        df_ml['n_return'] = np.nan
 
+        ml_nday_rets = (prices / prices.shift(21)) - 1
+        ml_nday_rets.ix[0:21,] = 0
+        YBUY = 0.06
+        YSELL = -0.06
+        total_days = df_ml.shape[0]
+        for i in range(0, total_days):
+            if ml_nday_rets.ix[i,0] > YBUY:
+                df_ml['n_return'].ix[i] = 1
+            elif ml_nday_rets.ix[i,0] < YSELL:
+                df_ml['n_return'].ix[i] = -1
+            else:
+                df_ml['n_return'].ix[i] = 0
+
+        df_ml.fillna(method='ffill', inplace=True)
+        df_ml.fillna(method='bfill', inplace=True)
+
+        train_data = df_ml.as_matrix()
+        self.learner.addEvidence(train_data[:total_days, 0:-1], train_data[:total_days, -1])
+
+
+
+    # this method should use the existing policy and test it against new data
+    def testPolicy(self, symbol = "IBM", \
+        sd=dt.datetime(2009,1,1), \
+        ed=dt.datetime(2010,1,1), \
+        sv = 10000):
+        lookback=21
         # here we build a fake set of trades
         # your code should return the same sort of data
         dates = pd.date_range(sd, ed)
         prices_all = ut.get_data([symbol], dates)  # automatically adds SPY
-        prices = prices_all[[symbol,]]
-        trades = prices_all[[symbol, ]]  # only portfolio symbols
-        trades_SPY = prices_all['SPY']  # only SPY, for comparison later
+        trades = prices_all[[symbol,]]  # only portfolio symbols
         trades.values[:, :] = 0
+        prices=prices_all[[symbol,]]
+        trades_SPY = prices_all['SPY']  # only SPY, for comparison later
 
-        test_SMA = prices.rolling(window=14, min_periods=14).mean()
-        test_SMA.fillna(method='ffill', inplace=True)
-        test_SMA.fillna(method='bfill', inplace=True)
+        test_sma = prices.rolling(window=21, min_periods=21).mean()
+        test_sma.fillna(method='ffill', inplace=True)
+        test_sma.fillna(method='bfill', inplace=True)
 
-        test_std = prices.rolling(window=14, min_periods=14).std()
-        top_band = test_SMA + (2 * test_std)
-        bottom_band = test_SMA - (2 * test_std)
+        test_rolling_std = prices.rolling(window=lookback, min_periods=lookback).std()
+        top_band = test_sma + (2 * test_rolling_std)
+        bottom_band = test_sma - (2 * test_rolling_std)
         test_bbp = (prices - bottom_band) / (top_band - bottom_band)
         # turn sma into price/sma ratio
-        test_SMAPrice_ratio = prices / test_SMA
+        test_sma_ratio = prices / test_sma
 
         # caculate momentum
-        test_momentum = (prices / prices.copy().shift(14)) - 1
+        test_momentum = (prices / prices.copy().shift(lookback)) - 1
 
-        test_daily_rets = (prices / prices.shift(1)) - 1
-        test_size = test_daily_rets.rolling(14, 14).std()
-        test_size.fillna(method='ffill', inplace=True)
-        test_size.fillna(method='bfill', inplace=True)
 
-        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_strategy_states = (test_bbp_n * 100 + test_momentum_n * 10 + test_size_n).values
+        df_ml_t = pd.concat([test_sma_ratio, test_bbp, test_momentum], axis=1)
+        df_ml_t.columns = ['SMA_P', 'bbp', 'momentum']
+        df_ml_t['n_return'] = np.nan
+        test_days = df_ml_t.shape[0]
+        test_data = df_ml_t.as_matrix()
 
-        test_total_dates = test_strategy_states.size
-        p = 0
-        for i in range(1, test_total_dates):
-            state = test_strategy_states[ i - 1, 0] + p *1000
-            action = self.qlearner.querysetstate(state)
-            status = 0
-            if p == 0 and action == 1:
+        testX=test_data[:test_days, 0:-1]
+        test_res = self.learner.query(testX)
+        test_res = test_res.astype(int)
+        total_days = testX.shape[0]
+        p=0
+        status = 0
+        for i in range(1, len(test_res)):
+
+            if p == 0 and test_res[i] == -1:
 
                 status= -1000
-                p = 1
-            elif p == 0 and action == 2:
+                p = -1
+            elif p == 0 and test_res[i] == 1:
                 status = 1000
-                p = 2
-
-            elif p == 1 and action == 2:
-                status = 2000
-                p = 2
-
-            elif p == 2 and action == 1:
-                status = -2000
                 p = 1
+
+            elif p == 1 and test_res[i] == -1:
+                status = -2000
+                p = -1
+
+            elif p == -1 and test_res[i] == 1:
+                status = 2000
+                p = 1
+            else:
+                status = 0
             trades.values[i,:] = status
 
-        if self.verbose: print type(trades)  # it better be a DataFrame!
+
+        if self.verbose: print type(trades) # it better be a DataFrame!
         if self.verbose: print trades
         if self.verbose: print prices_all
-        return trades
+        return  test_res, trades
 
-    def discritize(self,SMA_ratio,bbp,momentum, vol ):
 
-        SMA_ratio_n = SMA_ratio
-        min1 = SMA_ratio.ix[:, 0].min()
-        max1 = SMA_ratio.ix[:, 0].max()
-        SMA_ratio_n.ix[:, 0] = np.digitize(SMA_ratio.ix[:, 0], np.linspace(min1, max1, 10)) - 1
-        bbp_n = bbp
-        min2 = bbp.ix[:, 0].min()
-        max2 = bbp.ix[:, 0].max()
 
-        bbp_n.ix[:, 0] = np.digitize(bbp.ix[:, 0], np.linspace(min2, max2, 10)) - 1
 
-        momentum_n = momentum
-        min3 = momentum.ix[:, 0].min()
-        max3 = momentum.ix[:, 0].max()
-        momentum_n.ix[:, 0] = np.digitize(momentum.ix[:, 0], np.linspace(min3, max3, 10)) - 1
 
-        vol_n = vol
-        min4 = vol.ix[:, 0].min()
-        max4 = vol.ix[:, 0].max()
-        vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(min4, max4, 10)) - 1
-        return SMA_ratio_n,bbp_n,momentum_n, vol_n
 
-    def author(self):
-        return 'lwang496'
-
-    if __name__ == "__main__":
-        print "One does not simply think up a strategy"
+if __name__=="__main__":
+    print "One does not simply think up a strategy"

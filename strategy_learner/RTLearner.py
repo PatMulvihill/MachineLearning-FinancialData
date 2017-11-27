@@ -42,7 +42,7 @@ class RTLearner(object):
             return np.array([-1, Ytrain[0], None, None])
 
         if Xtrain.shape[0] <= self.leaf_size:
-            return np.array([-1, np.mean(Ytrain), None, None])
+            return np.array([-1, max(Ytrain.tolist()), None, None])
 
         left_index, right_index, split_index, split_value = [],[],[],[]
 

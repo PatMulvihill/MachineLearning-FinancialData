@@ -6,12 +6,11 @@ import matplotlib.pyplot as plt
 import datetime as dt
 import ManualStrategy as mn
 import os
-import StrategyLearner as sl
+import strategyexperiment1 as sl
 
 import datetime as dt
 from util import get_data, plot_data
 import marketsimcode as mk
-
 
 
 start_date_train = dt.datetime(2008,1,01)
@@ -92,4 +91,39 @@ img= final_frame.plot( fontsize=12,
                   title='Manual Strategy vs Benchmark (in sample)')
 img.set_xlabel("Date")
 img.set_ylabel("Normalized value")
+
+bench_daily_rets = (benchmark_frame / benchmark_frame.shift(1)) - 1
+bench_daily_rets = bench_daily_rets[1:]
+bench_cr = (benchmark_frame.ix[-1] / benchmark_frame.ix[0]) - 1
+bench_adr = bench_daily_rets.mean()
+bench_sddr = bench_daily_rets.std()
+
+print "Benchmark Volatility (stdev of daily returns):", bench_sddr
+print "Benchmark Average Daily Return:", bench_adr
+print "Benchmark Cumulative Return:", bench_cr
+
+
+daily_rets = (manual_portvals / manual_portvals.shift(1)) - 1
+daily_rets = daily_rets[1:]
+cr = (manual_portvals.ix[-1] / manual_portvals.ix[0]) - 1
+adr = daily_rets.mean()
+sddr = daily_rets.std()
+sr = np.sqrt(252) * (adr) / sddr
+
+print "manual strategy in sample Volatility (stdev of daily returns):", sddr
+print "manual strategy in sample Average Daily Return:", adr
+print "manual strategy in sample Cumulative Return:", cr
+
+s_daily_rets = (strategy_portvals / strategy_portvals.shift(1)) - 1
+s_daily_rets = s_daily_rets[1:]
+s_cr = (strategy_portvals.ix[-1] / strategy_portvals.ix[0]) - 1
+s_adr = s_daily_rets.mean()
+s_sddr = s_daily_rets.std()
+s_sr = np.sqrt(252) * (s_adr) / s_sddr
+
+print " strategy learner in sample Volatility (stdev of daily returns):", s_sddr
+print " strategy learner in sample Average Daily Return:", s_adr
+print " strategy learner in sample Cumulative Return:", s_cr
+
+
 plt.show()

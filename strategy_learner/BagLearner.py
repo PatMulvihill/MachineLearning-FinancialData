@@ -1,5 +1,5 @@
 import numpy as np
-
+from collections import Counter
 
 class BagLearner(object):
 
@@ -30,16 +30,16 @@ class BagLearner(object):
         result = []
         learners = []
 
-        for i in range(0,self.bags):
+        for i in range(0, self.bags):
             learners.append(self.learner(**self.kwargs))
 
-        for i in range(0,len(learners)):
-            learners[i].addEvidence(self.Xbags[i],self.Ybags[i])
+        for i in range(0, len(learners)):
+            learners[i].addEvidence(self.Xbags[i], self.Ybags[i])
             result.append(learners[i].query(Xtest))
 
         if self.verbose:
-            print np.mean(np.array(result), axis=0)
+            print np.min(np.array(result), axis=0)
 
-        return np.mean(np.array(result), axis=0)
+        return np.min(np.array(result), axis=0)
 
 
