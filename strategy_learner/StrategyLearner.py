@@ -63,7 +63,7 @@ class StrategyLearner(object):
         train_momentum = (prices / prices.copy().shift(14)) - 1
 
         train_daily_rets = (prices / prices.shift(1)) - 1
-        train_size = pd.rolling_std(train_daily_rets, 14)
+        train_size = train_daily_rets.rolling(14, 14).std()
         train_size.fillna(method='ffill', inplace=True)
         train_size.fillna(method='bfill', inplace=True)
 
@@ -145,8 +145,8 @@ class StrategyLearner(object):
         prices_all = ut.get_data([symbol], dates)  # automatically adds SPY
         prices = prices_all[[symbol,]]
         trades = prices_all[[symbol, ]]  # only portfolio symbols
-        trades.values[:, :] = 0
         trades_SPY = prices_all['SPY']  # only SPY, for comparison later
+        trades.values[:, :] = 0
 
         test_SMA = prices.rolling(window=14, min_periods=14).mean()
         test_SMA.fillna(method='ffill', inplace=True)
