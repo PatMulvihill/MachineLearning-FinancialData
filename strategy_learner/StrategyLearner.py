@@ -169,10 +169,10 @@ class StrategyLearner(object):
 
         test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_strategy = test_bbp_n * 100 + test_momentum_n * 10 + test_size_n
-        test_strategy_states = test_strategy.values
-        p = 0
+        test_strategy_states = (test_bbp_n * 100 + test_momentum_n * 10 + test_size_n).values
+
         test_total_dates = test_strategy_states.size
+        p = 0
         for i in range(1, test_total_dates):
             state = test_strategy_states[ i - 1, 0] + p *1000
             action = self.qlearner.querysetstate(state)
