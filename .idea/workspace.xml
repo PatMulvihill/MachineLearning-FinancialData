@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="94bfa3c6-49f4-47b2-82c3-a4b319ccf52e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner_ql.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/Strategy_experiment1.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/strategy_learner/strategyexperiment1.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/BagLearner.py" afterPath="$PROJECT_DIR$/strategy_learner/BagLearner.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/ManualStrategy.py" afterPath="$PROJECT_DIR$/strategy_learner/ManualStrategy.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/RTLearner.py" afterPath="$PROJECT_DIR$/strategy_learner/RTLearner.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/StrategyLearner.py" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/StrategyLearner_RT.py" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner_RT.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/experiment1.py" afterPath="$PROJECT_DIR$/strategy_learner/experiment1.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/indicators.py" afterPath="$PROJECT_DIR$/strategy_learner/indicators.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,8 +17,8 @@
       <file leaf-file-name="StrategyLearner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2340">
-              <caret line="156" column="0" lean-forward="true" selection-start-line="156" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
+            <state relative-caret-position="371">
+              <caret line="152" column="15" lean-forward="false" selection-start-line="152" selection-start-column="15" selection-end-line="152" selection-end-column="15" />
               <folding>
                 <element signature="e#74#95#0" expanded="true" />
               </folding>
@@ -1058,8 +1048,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2340">
-          <caret line="156" column="0" lean-forward="true" selection-start-line="156" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
+        <state relative-caret-position="371">
+          <caret line="152" column="15" lean-forward="false" selection-start-line="152" selection-start-column="15" selection-end-line="152" selection-end-column="15" />
           <folding>
             <element signature="e#74#95#0" expanded="true" />
           </folding>

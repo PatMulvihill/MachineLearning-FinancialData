@@ -150,7 +150,7 @@ class StrategyLearner(object):
         if self.verbose: print type(trades) # it better be a DataFrame!
         if self.verbose: print trades
         if self.verbose: print prices_all
-        return  test_res, trades
+        return trades
 
 
 
