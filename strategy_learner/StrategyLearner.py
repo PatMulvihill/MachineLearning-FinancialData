@@ -69,7 +69,7 @@ class StrategyLearner(object):
 
         train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-        strategy =    train_bbp_n * 100 + train_momentum_n * 10 + train_size_n
+        strategy =  train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_size_n
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
@@ -87,7 +87,7 @@ class StrategyLearner(object):
         while not converged:
 
             p = 0
-            state =  strategy_states[0, 0] + p *1000
+            state =  strategy_states[0, 0]
             action = self.learner.querysetstate(state)
             total_days = strategy_states.shape[0]
             prev_val = sv
@@ -126,7 +126,7 @@ class StrategyLearner(object):
 
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
-                state = strategy_states[i, 0] + p*1000
+                state = strategy_states[i, 0]
                 action = self.learner.query(state, reward)
 
             round += 1
