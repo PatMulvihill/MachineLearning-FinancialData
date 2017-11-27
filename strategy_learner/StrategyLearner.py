@@ -16,7 +16,7 @@ class StrategyLearner(object):
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact
-        self.learner = ql.QLearner(num_states=3000, \
+        self.qlearner = ql.QLearner(num_states=3000, \
                                    num_actions=3, \
                                    alpha=0.2, \
                                    gamma=0.9, \
@@ -88,7 +88,7 @@ class StrategyLearner(object):
 
             p = 0
             state =  strategy_states[0, 0]
-            action = self.learner.querysetstate(state)
+            action = self.qlearner.querysetstate(state)
             total_days = strategy_states.shape[0]
             prev_val = sv
             for i in range(1, total_days):
@@ -127,7 +127,7 @@ class StrategyLearner(object):
                 reward = curr_val / prev_val - 1
                 prev_val = curr_val
                 state = strategy_states[i, 0]
-                action = self.learner.query(state, reward)
+                action = self.qlearner.query(state, reward)
 
             round += 1
             if round > 1300:
@@ -163,7 +163,7 @@ class StrategyLearner(object):
         test_momentum = (prices / prices.copy().shift(14)) - 1
 
         test_daily_rets = (prices / prices.shift(1)) - 1
-        test_size = pd.rolling_std(test_daily_rets, 14)
+        test_size = test_daily_rets.rolling(14, 14).std()
         test_size.fillna(method='ffill', inplace=True)
         test_size.fillna(method='bfill', inplace=True)
 
@@ -175,7 +175,7 @@ class StrategyLearner(object):
         test_total_dates = test_strategy_states.size
         for i in range(1, test_total_dates):
             state = test_strategy_states[ i - 1, 0] + p *1000
-            action = self.learner.querysetstate(state)
+            action = self.qlearner.querysetstate(state)
             status = 0
             if p == 0 and action == 1:
 
