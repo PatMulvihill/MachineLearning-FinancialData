@@ -232,7 +232,10 @@ class StrategyLearner(object):
 
 
 sl = StrategyLearner(False,0)
-
+sl.addEvidence( symbol = "IBM", \
+        sd=dt.datetime(2008,1,1), \
+        ed=dt.datetime(2009,1,1), \
+        sv = 10000)
 
 res= sl.testPolicy(symbol = "IBM", \
         sd=dt.datetime(2009,1,1), \

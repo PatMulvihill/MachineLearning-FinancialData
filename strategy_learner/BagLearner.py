@@ -34,10 +34,13 @@ class BagLearner(object):
             learners.append(self.learner(**self.kwargs))
 
         for i in range(0, len(learners)):
+            # randomn here
             learners[i].addEvidence(self.Xbags[i], self.Ybags[i])
             result.append(learners[i].query(Xtest))
 
         if self.verbose:
+
+            #need vote
             print np.min(np.array(result), axis=0)
 
         return np.min(np.array(result), axis=0)
