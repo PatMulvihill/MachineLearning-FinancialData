@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="94bfa3c6-49f4-47b2-82c3-a4b319ccf52e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/BagLearner.py" afterPath="$PROJECT_DIR$/strategy_learner/BagLearner.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/StrategyLearner.py" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/strategy_learner/StrategyLearner_ql.py" afterPath="$PROJECT_DIR$/strategy_learner/StrategyLearner_ql.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,11 +18,43 @@
       <file leaf-file-name="StrategyLearner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2664">
-              <caret line="22" column="29" lean-forward="false" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
+            <state relative-caret-position="364">
+              <caret line="137" column="0" lean-forward="true" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
               <folding>
                 <element signature="e#105#126#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ML_based.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/strategy_learner/ML_based.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="27" column="40" lean-forward="false" selection-start-line="27" selection-start-column="40" selection-end-line="27" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="experiment1.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/strategy_learner/experiment1.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1260">
+              <caret line="94" column="67" lean-forward="false" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="67" />
+              <folding>
+                <element signature="e#32#50#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strategyexperiment1.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/strategy_learner/strategyexperiment1.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="960">
+              <caret line="68" column="17" lean-forward="false" selection-start-line="68" selection-start-column="17" selection-end-line="68" selection-end-column="17" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -32,8 +62,8 @@
       <file leaf-file-name="StrategyLearner_ql.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner_ql.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1154">
-              <caret line="218" column="19" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="244" selection-end-column="9" />
+            <state relative-caret-position="3195">
+              <caret line="218" column="19" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="244" selection-end-column="9" />
               <folding>
                 <element signature="e#105#126#0" expanded="true" />
               </folding>
@@ -41,31 +71,33 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="grade_strategy_learner.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/strategy_learner/grade_strategy_learner.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1560">
-              <caret line="118" column="23" lean-forward="false" selection-start-line="118" selection-start-column="23" selection-end-line="118" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Strategy_experiment1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/strategy_learner/Strategy_experiment1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="12" column="26" lean-forward="false" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="StrategyLearner_RT.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner_RT.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="11" lean-forward="false" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="11" />
+            <state relative-caret-position="360">
+              <caret line="24" column="20" lean-forward="false" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+              <folding>
+                <element signature="e#74#95#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ManualStrategy.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/strategy_learner/ManualStrategy.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="3" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="3" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="marketsimcode.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/strategy_learner/marketsimcode.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="35" column="18" lean-forward="true" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -76,16 +108,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="2" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="QLearner.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/strategy_learner/QLearner.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="24" column="26" lean-forward="false" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -103,26 +125,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="testqlearner.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/qlearning_robot/testqlearner.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BagLearner.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mc3-p3/BagLearner.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="42" column="48" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="42" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -134,9 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ini</find>
-      <find>learn</find>
-      <find>momentum_day</find>
       <find>sym</find>
       <find>day</find>
       <find>DEL</find>
@@ -164,6 +163,9 @@
       <find>boost, verb</find>
       <find>mean</find>
       <find>rand</find>
+      <find>impa</find>
+      <find>rew</find>
+      <find>impact</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -217,7 +219,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
+    <option name="x" value="226" />
+    <option name="y" value="118" />
     <option name="width" value="1280" />
     <option name="height" value="726" />
   </component>
@@ -236,6 +239,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -394,8 +399,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -616,7 +619,7 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="726" extended-state="6" />
+    <frame x="226" y="118" width="1280" height="726" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16015625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -861,13 +864,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/strategy_learner/ML_based.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="27" column="40" lean-forward="false" selection-start-line="27" selection-start-column="40" selection-end-line="27" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mc3-p3/RTLearner.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -925,20 +921,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/strategy_learner/marketsimcode.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/strategy_learner/strategyexperiment1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1560">
-          <caret line="108" column="28" lean-forward="false" selection-start-line="108" selection-start-column="28" selection-end-line="108" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/indicators.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="825">
@@ -946,25 +928,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/strategy_learner/experiment1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1410">
-          <caret line="94" column="67" lean-forward="false" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/strategy_learner/ManualStrategy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="53" column="47" lean-forward="false" selection-start-line="52" selection-start-column="4" selection-end-line="53" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/Strategy_experiment1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="12" column="26" lean-forward="false" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -972,7 +939,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
           <caret line="42" column="48" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="42" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1000,14 +966,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner_RT.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="11" lean-forward="false" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/RTLearner.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1028,18 +986,70 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner_ql.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1154">
-          <caret line="218" column="19" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="244" selection-end-column="9" />
+        <state relative-caret-position="3195">
+          <caret line="218" column="19" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="244" selection-end-column="9" />
           <folding>
             <element signature="e#105#126#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/strategy_learner/experiment1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="94" column="67" lean-forward="false" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="67" />
+          <folding>
+            <element signature="e#32#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/strategy_learner/strategyexperiment1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="68" column="17" lean-forward="false" selection-start-line="68" selection-start-column="17" selection-end-line="68" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner_RT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="20" lean-forward="false" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+          <folding>
+            <element signature="e#74#95#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/strategy_learner/ManualStrategy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="3" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/strategy_learner/ML_based.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="27" column="40" lean-forward="false" selection-start-line="27" selection-start-column="40" selection-end-line="27" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/strategy_learner/marketsimcode.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="35" column="18" lean-forward="true" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/strategy_learner/StrategyLearner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2664">
-          <caret line="22" column="29" lean-forward="false" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
+        <state relative-caret-position="364">
+          <caret line="137" column="0" lean-forward="true" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
           <folding>
             <element signature="e#105#126#0" expanded="true" />
           </folding>

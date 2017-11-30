@@ -91,18 +91,23 @@ class StrategyLearner(object):
             action = self.qlearner.querysetstate(state)
             total_days = strategy_states.shape[0]
             prev_val = sv
-            for i in range(1, total_days):
 
+            for i in range(1, total_days):
+                # curr_price will be used to caculate impact
+                curr_price = train_array[i, 1]
+                amount = 0
                 if p == 0 and action == 1:
                     train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 1000
                     curr_val = train_array[i, 2] -1000 * train_array[i, 1]
                     train_array[i,0] = -1000
+                    amount =1000
                     p = 1
                 elif p==0 and action == 2:
 
                     train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000
                     curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
                     train_array[i, 0] = 1000
+                    amount = 1000
                     p = 2
 
                 elif p == 1 and action == 2:
@@ -110,6 +115,7 @@ class StrategyLearner(object):
                     train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000
                     curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
                     train_array[i, 0] = 1000
+                    amount = 2000
                     p = 2
 
                 elif p == 2 and action == 1:
@@ -117,6 +123,7 @@ class StrategyLearner(object):
                     train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000
                     curr_val = train_array[i, 2] -1000 * train_array[i, 1]
                     train_array[i, 0] = -1000
+                    amount =2000
                     p = 1
 
                 else:
@@ -124,7 +131,7 @@ class StrategyLearner(object):
                     train_array[i, 2] = train_array[i - 1, 2]
                     curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
 
-                reward = curr_val / prev_val - 1
+                reward = (curr_val - self.impact*curr_price*abs(amount)) / prev_val - 1
                 prev_val = curr_val
                 state = strategy_states[i, 0]
                 action = self.qlearner.query(state, reward)
