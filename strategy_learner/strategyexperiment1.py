@@ -1,155 +1,234 @@
-import pandas as pd
-import numpy as np
+
+
+'''Author: Lu Wang lwang496'''
+
 import datetime as dt
-import util
-import QLearner
+import pandas as pd
+import util as ut
+import random
+import numpy as np
+import QLearner as ql
 
+class StrategyLearner1(object):
 
-class TradingEnvironment(object):
-    class Action:
-        BUY = 0
-        SELL = 1
-        WAIT = 2
-
-    def __init__(self, symbol='SPY',
-                 sd=dt.datetime(2008, 1, 1),
-                 ed=dt.datetime(2009, 12, 31),
-                 sv=10000,
-                 verbose=False):
-
-        self.verbose = verbose
-        self.symbol = symbol
-        self.cash = sv
-        self.sv = sv
-        self.shares = 0
-        self.pp = 0  # Purchase Price
-
-        dates = pd.date_range(sd - dt.timedelta(100), ed)
-        df = util.get_data([symbol], dates)[symbol]
-        normalized = df / df.ix[0]
-        sma = normalized.rolling(50).mean()
-        std = normalized.rolling(50).std()
-        bb = bb = (normalized - (sma - std * 2)) / ((sma + std * 2) - (sma - std * 2))
-        df = pd.DataFrame(df).assign(normalized=normalized).assign(sma=sma).assign(psma=normalized / sma).assign(bb=bb)[
-             sd:]
-        daily_returns = df[symbol].copy()
-        daily_returns[1:] = (df[symbol].ix[1:] / df[symbol].ix[:-1].values) - 1
-        daily_returns.ix[0] = 0
-        df = df.assign(dr=daily_returns)
-        df = df.assign(qsma=pd.qcut(df['psma'], 100, labels=False))
-
-        self.df = df
-        self.market = df.iterrows()
-        self.current_stats = self.market.next()
-        self.action = self.Action()
-
-    def buy(self):
-        if self.shares >= 200:
-            return -10000  # Invalid purchase
-        closing_price = self.current_stats[1][self.symbol]
-        self.pp = pd.cut(self.df['normalized'], 10, labels=False)[self.current_stats[0]]
-        if self.verbose: print "Buy 100 @ %0.2f" % (closing_price)
-        self.shares = self.shares + 100
-        self.cash = self.cash - (100 * closing_price)  # Closing price
-        dr = self.shares * self.current_stats[1]['dr']
-        return dr  # Reward
-
-    def sell(self):
-        if self.shares <= 0:
-            return -10000  # Invalid sale
-        if self.verbose: print "SELL 100 @ %0.2f" % (self.current_stats[1][self.symbol])
-        self.shares = self.shares - 100
-        self.cash = self.cash + (100 * self.current_stats[1][self.symbol])  # Closing price
-        self.pp = 0  # Reset Purchase Price
-        return (self.cash - self.sv) + (self.shares * self.current_stats[1][self.symbol])  # Reward
-
-    def wait(self):
-        if self.verbose: print "WAIT @ %0.2f" % (self.current_stats[1][self.symbol])
-        dr = self.shares * self.current_stats[1]['dr']
-        return dr
-
-    def discritize_state(self):
-
-        norm = pd.cut(self.df['normalized'], 10, labels=False)
-        psma = pd.cut(self.df['psma'], 10, labels=False)
-        bb = pd.cut(self.df['bb'], 10, labels=False)
-        date = self.current_stats[0]
-
-        return (bb * 1000) + (self.pp * 100) + (norm[date] * 10) + psma[date]
-
-    def increment(self, action):
-        # Calculate reward based on action
-        print action
-        r = {
-            self.action.BUY: self.buy,
-            self.action.SELL: self.sell,
-            self.action.WAIT: self.wait,
-        }[action]()
-
-        # Move foward one day and calculate new state
-        try:
-            self.current_stats = self.market.next()
-            s = self.discritize_state()
-        except StopIteration:
-            return None, None
-        return s, r  # state, reward
-
-    def state(self):
-        cv = self.shares * self.current_stats[1][self.symbol] + self.cash
-        return (cv, self.cash, self.shares, self.current_stats[1][self.symbol])
-
-    def baseline(self):
-        cr = self.sv + ((self.df[self.symbol].ix[-1] - self.df[self.symbol].ix[0]) * 100)
-        return cr
-
-
-class StrategyLearner(object):
-    def __init__(self, verbose=False, impact = 0):
+    # constructor
+    def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact
-        self.Q = QLearner.QLearner(
-            num_states=10000,
-            num_actions=3,
-            alpha=0.2,
-            gamma=0.9,
-            rar=0.5,
-            radr=0.99,
-            dyna=50)
+        self.qlearner = ql.QLearner(num_states=1000, \
+                                   num_actions=3, \
+                                   alpha=0.2, \
+                                   gamma=0.9, \
+                                   rar=0.5, \
+                                   radr=0.99, \
+                                   dyna=0, \
+                                   verbose=False)
 
-    def addEvidence(self,
-                    symbol='SPY',
-                    sd=dt.datetime(2008, 1, 1),
-                    ed=dt.datetime(2009, 12, 31),
-                    sv=10000):
+    # this method should create a QLearner, and train it for trading
+    def addEvidence(self, symbol = "IBM", \
+        sd=dt.datetime(2008,1,1), \
+        ed=dt.datetime(2009,1,1), \
+        sv = 10000):
 
-        cr = 0
-        cr_last = -1
-        while cr != cr_last:
-            tenv = TradingEnvironment(symbol, sd, ed, sv, self.verbose)
-            s = tenv.discritize_state()
-            a = self.Q.querysetstate(s)
-            while True:
-                s1, r = tenv.increment(a)
-                if s1 is None:
-                    break
-                a = self.Q.query(s1, r)
 
-            print tenv.state()
-            cr_last = cr
-            cr = tenv.state()[0]
+        # add your code to do learning here
 
-    def testPolicy(self,
-                   symbol,
-                   sd, ed, sv, verbose=False):
-        tenv = TradingEnvironment(symbol, sd, ed, sv, self.verbose)
-        s = tenv.discritize_state()
-        a = self.Q.querysetstate(s)
-        while True:
-            s1, r = tenv.increment(a)
-            if s1 is None:
-                break
-            a = self.Q.querysetstate(s1)
-            if verbose: print s1, r, a
+        # example usage of the old backward compatible util function
+        syms = [symbol]
+        dates = pd.date_range(sd, ed)
+        prices_all = ut.get_data(syms, dates)  # automatically adds SPY
+        prices = prices_all[syms]  # only portfolio symbols
+        prices_SPY = prices_all['SPY']  # only SPY, for comparison later
+        if self.verbose: print prices
 
-        print "CR: %0.2f" % (tenv.state()[0] / sv)
-        print "Baseline: %0.2f" % (tenv.baseline() / sv)
+        # example use with new colname
+        volume_all = ut.get_data(syms, dates, colname="Volume")  # automatically adds SPY
+        volume = volume_all[syms]  # only portfolio symbols
+        volume_SPY = volume_all['SPY']  # only SPY, for comparison later
+        if self.verbose: print volume
+
+        train_SMA = prices.rolling(window=21, min_periods=21).mean()
+        train_SMA.fillna(method='ffill', inplace=True)
+        train_SMA.fillna(method='bfill', inplace=True)
+
+        train_std = prices.rolling(window=21, min_periods=21).std()
+        top_band = train_SMA + (2 * train_std)
+        bottom_band = train_SMA - (2 * train_std)
+        train_bbp = (prices - bottom_band) / (top_band - bottom_band)
+        # turn sma into price/sma ratio
+        train_SMAPrice_ratio = prices / train_SMA
+
+        # caculate momentum
+        train_momentum = (prices / prices.copy().shift(21)) - 1
+
+        train_daily_rets = (prices / prices.shift(1)) - 1
+        train_size = train_daily_rets.rolling(21, 21).std()
+        train_size.fillna(method='ffill', inplace=True)
+        train_size.fillna(method='bfill', inplace=True)
+
+        train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
+
+        strategy =  train_bbp_n * 100
+        start = strategy.index[0]
+        end = strategy.index[-1]
+        dates = pd.date_range(start, end)
+        strategy_states = strategy.values
+        df = pd.DataFrame(index = dates)
+
+        df['positions'] = 0
+        df['values'] = prices.ix[start:end, symbol]
+        df['cash'] = sv
+        df.fillna(method='ffill', inplace=True)
+        df.fillna(method='bfill', inplace=True)
+        train_array = df.values
+        converged = False
+        round = 0
+        while not converged:
+
+            p = 0
+            state =  strategy_states[0, 0]
+            action = self.qlearner.querysetstate(state)
+            total_days = strategy_states.shape[0]
+            prev_val = sv
+
+            for i in range(1, total_days):
+                # curr_price will be used to caculate impact
+                curr_price = train_array[i, 1]
+                amount = 0
+                if p == 0 and action == 1:
+                    amount = 1000
+                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 1000 - self.impact*curr_price*abs(amount)
+                    curr_val = train_array[i, 2] -1000 * train_array[i, 1]
+                    train_array[i,0] = -1000
+
+                    p = 1
+                elif p==0 and action == 2:
+                    amount = 1000
+                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000 - self.impact*curr_price*abs(amount)
+                    curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
+                    train_array[i, 0] = 1000
+
+                    p = 2
+
+                elif p == 1 and action == 2:
+                    amount = 2000
+                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000 - self.impact*curr_price*abs(amount)
+                    curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
+                    train_array[i, 0] = 1000
+
+                    p = 2
+
+                elif p == 2 and action == 1:
+                    amount = 2000
+                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000 - self.impact*curr_price*abs(amount)
+                    curr_val = train_array[i, 2] -1000 * train_array[i, 1]
+                    train_array[i, 0] = -1000
+
+                    p = 1
+
+                else:
+                    train_array[i, 0] = train_array[i - 1, 0]
+                    train_array[i, 2] = train_array[i - 1, 2]
+                    curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
+
+                reward = curr_val / prev_val - 1
+                prev_val = curr_val
+                state = strategy_states[i, 0]
+                action = self.qlearner.query(state, reward)
+
+            round += 1
+            if round > 1300:
+                converged = True
+
+
+    def testPolicy(self, symbol="IBM", \
+                   sd=dt.datetime(2009, 1, 1), \
+                   ed=dt.datetime(2010, 1, 1), \
+                   sv=100000):
+
+        # here we build a fake set of trades
+        # your code should return the same sort of data
+        dates = pd.date_range(sd, ed)
+        prices_all = ut.get_data([symbol], dates)  # automatically adds SPY
+        prices = prices_all[[symbol,]]
+        trades = prices_all[[symbol, ]]  # only portfolio symbols
+        trades_SPY = prices_all['SPY']  # only SPY, for comparison later
+        trades.values[:, :] = 0
+
+        test_SMA = prices.rolling(window=21, min_periods=21).mean()
+        test_SMA.fillna(method='ffill', inplace=True)
+        test_SMA.fillna(method='bfill', inplace=True)
+
+        test_std = prices.rolling(window=21, min_periods=21).std()
+        top_band = test_SMA + (2 * test_std)
+        bottom_band = test_SMA - (2 * test_std)
+        test_bbp = (prices - bottom_band) / (top_band - bottom_band)
+        # turn sma into price/sma ratio
+        test_SMAPrice_ratio = prices / test_SMA
+
+        # caculate momentum
+        test_momentum = (prices / prices.copy().shift(21)) - 1
+
+        test_daily_rets = (prices / prices.shift(1)) - 1
+        test_size = test_daily_rets.rolling(21, 21).std()
+        test_size.fillna(method='ffill', inplace=True)
+        test_size.fillna(method='bfill', inplace=True)
+
+        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
+
+        test_strategy_states = (test_bbp_n * 100   ).values
+
+        test_total_dates = test_strategy_states.size
+        p = 0
+        for i in range(1, test_total_dates):
+            state = test_strategy_states[ i - 1, 0]
+            action = self.qlearner.querysetstate(state)
+            status = 0
+            if p == 0 and action == 1:
+
+                status= -1000
+                p = 1
+            elif p == 0 and action == 2:
+                status = 1000
+                p = 2
+
+            elif p == 1 and action == 2:
+                status = 2000
+                p = 2
+
+            elif p == 2 and action == 1:
+                status = -2000
+                p = 1
+            trades.values[i,:] = status
+
+        if self.verbose: print type(trades)  # it better be a DataFrame!
+        if self.verbose: print trades
+        if self.verbose: print prices_all
+        return trades
+
+    def discritize(self,SMA_ratio,bbp,momentum, vol ):
+
+
+        SMA_ratio_n = SMA_ratio
+        min1 = SMA_ratio.ix[:, 0].min()
+        max1 = SMA_ratio.ix[:, 0].max()
+        SMA_ratio_n.ix[:, 0] = np.digitize(SMA_ratio.ix[:, 0], np.linspace(min1, max1, 10)) - 1
+        bbp_n = bbp
+        min2 = bbp.ix[:, 0].min()
+        max2 = bbp.ix[:, 0].max()
+
+        bbp_n.ix[:, 0] = np.digitize(bbp.ix[:, 0], np.linspace(min2, max2, 10)) - 1
+
+        momentum_n = momentum
+        min3 = momentum.ix[:, 0].min()
+        max3 = momentum.ix[:, 0].max()
+        momentum_n.ix[:, 0] = np.digitize(momentum.ix[:, 0], np.linspace(min3, max3, 10)) - 1
+
+        vol_n = vol
+        min4 = vol.ix[:, 0].min()
+        max4 = vol.ix[:, 0].max()
+        vol_n.ix[:, 0] = np.digitize(vol.ix[:, 0], np.linspace(min4, max4, 10)) - 1
+        return SMA_ratio_n,bbp_n,momentum_n, vol_n
+
+    def author(self):
+        return 'lwang496'

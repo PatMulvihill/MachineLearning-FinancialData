@@ -124,7 +124,10 @@ class StrategyLearner(object):
                     train_array[i, 2] = train_array[i - 1, 2]
                     curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
 
-                reward = curr_val / prev_val - 1
+                if prev_val == 0:
+                    reward = 0
+                else:
+                    reward = curr_val / prev_val - 1
                 prev_val = curr_val
                 state = strategy_states[i, 0]
                 action = self.qlearner.query(state, reward)

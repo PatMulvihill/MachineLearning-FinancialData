@@ -66,7 +66,7 @@ def testPolicy( symbol, sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,12,31), sv
         orders['Position'].ix[0] = 0
 
     for i in range(1, orders.shape[0] - 1):
-        if orders['sma'].ix[i] > 1.05 and orders['bbp'].ix[i]>1:
+        if orders['bbp'].ix[i]>1:
             if orders['Position'].ix[i - 1] == 1000:
                 orders['Position'].ix[i] = -1000
                 orders['SELL'].ix[i] = 2000
@@ -76,7 +76,7 @@ def testPolicy( symbol, sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,12,31), sv
             else:
                 orders['Position'].ix[i] = orders['Position'].ix[i - 1]
 
-        elif orders['sma'].ix[i] < 0.95 and orders['bbp'].ix[i]<0:
+        elif orders['bbp'].ix[i]<0:
 
             if orders['Position'].ix[i - 1] == -1000:
                 orders['Position'].ix[i] = 1000

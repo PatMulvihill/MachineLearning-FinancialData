@@ -63,13 +63,13 @@ class StrategyLearner(object):
         train_momentum = (prices / prices.copy().shift(14)) - 1
 
         train_daily_rets = (prices / prices.shift(1)) - 1
-        train_size = train_daily_rets.rolling(14, 14).std()
-        train_size.fillna(method='ffill', inplace=True)
-        train_size.fillna(method='bfill', inplace=True)
+        train_std = train_daily_rets.rolling(14, 14).std()
+        train_std.fillna(method='ffill', inplace=True)
+        train_std.fillna(method='bfill', inplace=True)
 
-        train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
+        train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_std_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_std)
 
-        strategy =  train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_size_n
+        strategy =  train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_std_n
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
@@ -132,7 +132,10 @@ class StrategyLearner(object):
                     train_array[i, 2] = train_array[i - 1, 2]
                     curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
 
-                reward = curr_val / prev_val - 1
+                if prev_val == 0:
+                    reward = 0
+                else:
+                    reward = curr_val / prev_val - 1
                 prev_val = curr_val
                 state = strategy_states[i, 0]
                 action = self.qlearner.query(state, reward)
@@ -171,13 +174,13 @@ class StrategyLearner(object):
         test_momentum = (prices / prices.copy().shift(14)) - 1
 
         test_daily_rets = (prices / prices.shift(1)) - 1
-        test_size = test_daily_rets.rolling(14, 14).std()
-        test_size.fillna(method='ffill', inplace=True)
-        test_size.fillna(method='bfill', inplace=True)
+        test_std = test_daily_rets.rolling(14, 14).std()
+        test_std.fillna(method='ffill', inplace=True)
+        test_std.fillna(method='bfill', inplace=True)
 
-        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
+        test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_std_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_std)
 
-        test_strategy_states = (test_bbp_n * 100 + test_momentum_n * 10 + test_size_n).values
+        test_strategy_states = (test_bbp_n * 100 + test_momentum_n * 10 + test_std_n).values
 
         test_total_dates = test_strategy_states.size
         p = 0

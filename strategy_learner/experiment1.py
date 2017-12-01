@@ -6,12 +6,29 @@ import matplotlib.pyplot as plt
 import datetime as dt
 import ManualStrategy as mn
 import os
-import strategyexperiment1 as sl
-
 import datetime as dt
 from util import get_data, plot_data
 import marketsimcode as mk
 
+
+
+"""
+Template for implementing StrategyLearner  (c) 2016 Tucker Balch
+"""
+'''Author: Lu Wang lwang496'''
+
+import datetime as dt
+import pandas as pd
+import util as ut
+import random
+import numpy as np
+import QLearner as ql
+import strategyexperiment1 as sl
+
+
+seed = 141109000
+np.random.seed(seed)
+random.seed(seed)
 
 start_date_train = dt.datetime(2008,1,01)
 end_date_train = dt.datetime(2009,12,31)
@@ -20,7 +37,7 @@ end_date_test = dt.datetime(2011,12,31)
 
 syms ='JPM'
 
-strategy_learner = sl.StrategyLearner( verbose = False, impact=0.0)
+strategy_learner = sl.StrategyLearner1( verbose = False, impact=0.0)
 strategy_learner.addEvidence(symbol = "JPM", \
         sd=dt.datetime(2008,1,1), \
         ed=dt.datetime(2009,12,31), \
