@@ -102,30 +102,30 @@ class StrategyLearner(object):
                     curr_val = train_array[i, 2] -1000 * train_array[i, 1]
                     train_array[i,0] = -1000
 
-                    p = 1
+                    p = -1
                 elif p==0 and action == 2:
                     amount = 1000
                     train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000 - self.impact*curr_price*abs(amount)
                     curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
                     train_array[i, 0] = 1000
 
-                    p = 2
+                    p = 1
 
-                elif p == 1 and action == 2:
+                elif p == -1 and action == 2:
                     amount = 2000
                     train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000 - self.impact*curr_price*abs(amount)
                     curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
                     train_array[i, 0] = 1000
 
-                    p = 2
+                    p = 1
 
-                elif p == 2 and action == 1:
+                elif p == 1 and action == 1:
                     amount = 2000
                     train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000 - self.impact*curr_price*abs(amount)
                     curr_val = train_array[i, 2] -1000 * train_array[i, 1]
                     train_array[i, 0] = -1000
 
-                    p = 1
+                    p = -1
 
                 else:
                     train_array[i, 0] = train_array[i - 1, 0]
@@ -191,18 +191,18 @@ class StrategyLearner(object):
             if p == 0 and action == 1:
 
                 status= -1000
-                p = 1
+                p = -1
             elif p == 0 and action == 2:
                 status = 1000
-                p = 2
-
-            elif p == 1 and action == 2:
-                status = 2000
-                p = 2
-
-            elif p == 2 and action == 1:
-                status = -2000
                 p = 1
+
+            elif p == -1 and action == 2:
+                status = 2000
+                p = 1
+
+            elif p == 1 and action == 1:
+                status = -2000
+                p = -1
             trades.values[i,:] = status
 
         if self.verbose: print type(trades)  # it better be a DataFrame!
