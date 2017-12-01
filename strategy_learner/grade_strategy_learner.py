@@ -106,6 +106,9 @@ def test_strategy(description, insample_args, outsample_args, benchmark_type, be
         if benchmark_type == 'clean':
             outsample_cr_to_beat = benchmark
         def timeoutwrapper_strategylearner():
+            #Set fixed seed for repetability
+            np.random.seed(seed)
+            random.seed(seed)
             learner = StrategyLearner.StrategyLearner(verbose=False,impact=impact)
             tmp = time.time()
             learner.addEvidence(**insample_args)
@@ -118,9 +121,6 @@ def test_strategy(description, insample_args, outsample_args, benchmark_type, be
             outsample_trades = learner.testPolicy(**outsample_args)
             out_test_t = time.time()-tmp
             return insample_trades_1, insample_trades_2, outsample_trades, train_t, test_t, out_test_t
-        #Set fixed seed for repetability
-        np.random.seed(seed)
-        random.seed(seed)
         msgs = []
         in_trades_1, in_trades_2, out_trades, train_t, test_t, out_test_t = run_with_timeout(timeoutwrapper_strategylearner,max_time,(),{})
         incorrect = False
@@ -200,8 +200,8 @@ def test_strategy(description, insample_args, outsample_args, benchmark_type, be
                 msgs.append("  Mismatched trades:\n {}".format(mismatches))
             else:
                 points_earned += 2.0
-            student_insample_cr = evalPolicy2(insample_args['symbol'],in_trades_1,insample_args['sv'],market_impact=impact,commission_cost=0.0)
-            student_outsample_cr = evalPolicy2(outsample_args['symbol'],out_trades, outsample_args['sv'],market_impact=impact,commission_cost=0.0)
+            student_insample_cr = evalPolicy2(insample_args['symbol'],in_trades_1,insample_args['sv'],insample_args['sd'],insample_args['ed'],market_impact=impact,commission_cost=0.0)
+            student_outsample_cr = evalPolicy2(outsample_args['symbol'],out_trades, outsample_args['sv'],outsample_args['sd'],outsample_args['ed'],market_impact=impact,commission_cost=0.0)
             if student_insample_cr <= benchmark:
                 incorrect = True
                 msgs.append("  in-sample return ({}) did not beat benchmark ({})".format(student_insample_cr,benchmark))
@@ -232,7 +232,7 @@ def test_strategy(description, insample_args, outsample_args, benchmark_type, be
     except Exception as e:
         # Test result: failed
         msg = "Test case description: {}\n".format(description)
-        
+
         # Generate a filtered stacktrace, only showing erroneous lines in student file(s)
         tb_list = tb.extract_tb(sys.exc_info()[2])
         for i in xrange(len(tb_list)):
@@ -258,14 +258,14 @@ def compute_benchmark(sd,ed,sv,symbol,market_impact,commission_cost,max_holdings
     date_idx = util.get_data([symbol,],pd.date_range(sd,ed)).index
     orders = pd.DataFrame(index=date_idx)
     orders['orders'] = 0; orders['orders'][0] = max_holdings; orders['orders'][-1] = -max_holdings
-    return evalPolicy2(symbol,orders,sv,market_impact,commission_cost)
+    return evalPolicy2(symbol,orders,sv,sd,ed,market_impact,commission_cost)
 
 def evalPolicy(student_trades,sym_prices,startval):
     ending_cash = startval - student_trades.mul(sym_prices,axis=0).sum()
     ending_stocks = student_trades.sum()*sym_prices.ix[-1]
     return float((ending_cash+ending_stocks)/startval)-1.0
 
-def evalPolicy2(symbol, student_trades, startval,market_impact,commission_cost):
+def evalPolicy2(symbol, student_trades, startval, sd, ed, market_impact,commission_cost):
     orders_df = pd.DataFrame(columns=['Shares','Order','Symbol'])
     for row_idx in student_trades.index:
         nshares = student_trades.loc[row_idx][0]
@@ -274,16 +274,14 @@ def evalPolicy2(symbol, student_trades, startval,market_impact,commission_cost):
         order = 'sell' if nshares < 0 else 'buy'
         new_row = pd.DataFrame([[abs(nshares),order,symbol],],columns=['Shares','Order','Symbol'],index=[row_idx,])
         orders_df = orders_df.append(new_row)
-    portvals = compute_portvals(orders_df,startval,market_impact,commission_cost)
+    portvals = compute_portvals(orders_df, sd, ed, startval,market_impact,commission_cost)
     return float(portvals[-1]/portvals[0])-1
 
-def compute_portvals(orders_df, startval, market_impact=0.0, commission_cost=0.0):
+def compute_portvals(orders_df, start_date, end_date, startval, market_impact=0.0, commission_cost=0.0):
     """Simulate the market for the given date range and orders file."""
     symbols = []
     orders = []
     orders_df = orders_df.sort_index()
-    start_date=orders_df.index[0]
-    end_date = orders_df.index[-1]
     for date, order in orders_df.iterrows():
         shares = order['Shares']
         action = order['Order']
