@@ -1,17 +1,34 @@
 '''Author: Lu Wang lwang496'''
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
 import ManualStrategy as mn
 import os
-import StrategyLearner as sl
-
 import datetime as dt
 from util import get_data, plot_data
 import marketsimcode as mk
 
 
+
+"""
+Template for implementing StrategyLearner  (c) 2016 Tucker Balch
+"""
+'''Author: Lu Wang lwang496'''
+
+import datetime as dt
+import pandas as pd
+import util as ut
+import random
+import numpy as np
+import QLearner as ql
+import strategyexperiment1 as sl
+
+
+seed = 141109000
+np.random.seed(seed)
+random.seed(seed)
 
 start_date_train = dt.datetime(2008,1,01)
 end_date_train = dt.datetime(2009,12,31)
@@ -20,9 +37,11 @@ end_date_test = dt.datetime(2011,12,31)
 
 syms ='JPM'
 
-
-strategy_learner = sl.StrategyLearner( verbose = False, impact=0.01)
-
+strategy_learner = sl.StrategyLearner1( verbose = False, impact=0.0)
+strategy_learner.addEvidence(symbol = "JPM", \
+        sd=dt.datetime(2008,1,1), \
+        ed=dt.datetime(2009,12,31), \
+        sv = 10000)
 strategy_trade = strategy_learner.testPolicy(symbol = "JPM", \
         sd=dt.datetime(2008,1,1), \
         ed=dt.datetime(2009,12,31), \
@@ -45,48 +64,143 @@ strategy_order_list.append([end_date_train.date(), syms, 'SELL', 0])
 strategy_order_n = pd.DataFrame(np.array(strategy_order_list), columns=['Date', 'Symbol', 'Order', 'Shares'])
 strategy_order_n.set_index('Date', inplace=True)
 
-print strategy_trade
-print strategy_order_n
+strategy_portvals1 = mk.compute_portvals(strategy_order_n, start_val=100000, commission=0, impact=0)
+strategy_portvals1.fillna(method='ffill', inplace=True)
+strategy_portvals1.fillna(method='bfill', inplace=True)
+print "strategy portvals"
+print strategy_portvals1
 
-order_list_manual = mn.testPolicy(symbol = "JPM", \
+
+seed = 141109000
+np.random.seed(seed)
+random.seed(seed)
+
+strategy_learner1 = sl.StrategyLearner1( verbose = False, impact=0.005)
+strategy_learner1.addEvidence(symbol = "JPM", \
         sd=dt.datetime(2008,1,1), \
         ed=dt.datetime(2009,12,31), \
         sv = 10000)
-print order_list_manual
+strategy_trade1 = strategy_learner1.testPolicy(symbol = "JPM", \
+        sd=dt.datetime(2008,1,1), \
+        ed=dt.datetime(2009,12,31), \
+        sv = 10000)
 
+strategy_order_list = []
+for day in strategy_trade1.index:
+
+    if strategy_trade1.ix[day, 0] == 1000:
+        strategy_order_list.append([day.date(), syms, 'BUY', 1000])
+    elif strategy_trade1.ix[day, 0] == 2000:
+        strategy_order_list.append([day.date(), syms, 'BUY', 2000])
+    elif strategy_trade1.ix[day, 0] == -2000:
+        strategy_order_list.append([day.date(), syms, 'SELL', 2000])
+    elif strategy_trade1.ix[day, 0] == -1000:
+        strategy_order_list.append([day.date(), syms, 'SELL', 1000])
+
+strategy_order_list.append([end_date_train.date(), syms, 'SELL', 0])
+
+strategy_order_n2 = pd.DataFrame(np.array(strategy_order_list), columns=['Date', 'Symbol', 'Order', 'Shares'])
+strategy_order_n2.set_index('Date', inplace=True)
+print strategy_order_n2
+
+
+
+seed = 141109000
+np.random.seed(seed)
+random.seed(seed)
+
+strategy_learner1 = sl.StrategyLearner1( verbose = False, impact=0.05)
+strategy_learner1.addEvidence(symbol = "JPM", \
+        sd=dt.datetime(2008,1,1), \
+        ed=dt.datetime(2009,12,31), \
+        sv = 10000)
+strategy_trade1 = strategy_learner1.testPolicy(symbol = "JPM", \
+        sd=dt.datetime(2008,1,1), \
+        ed=dt.datetime(2009,12,31), \
+        sv = 10000)
+
+strategy_order_list = []
+for day in strategy_trade1.index:
+
+    if strategy_trade1.ix[day, 0] == 1000:
+        strategy_order_list.append([day.date(), syms, 'BUY', 1000])
+    elif strategy_trade1.ix[day, 0] == 2000:
+        strategy_order_list.append([day.date(), syms, 'BUY', 2000])
+    elif strategy_trade1.ix[day, 0] == -2000:
+        strategy_order_list.append([day.date(), syms, 'SELL', 2000])
+    elif strategy_trade1.ix[day, 0] == -1000:
+        strategy_order_list.append([day.date(), syms, 'SELL', 1000])
+
+strategy_order_list.append([end_date_train.date(), syms, 'SELL', 0])
+
+strategy_order_n3 = pd.DataFrame(np.array(strategy_order_list), columns=['Date', 'Symbol', 'Order', 'Shares'])
+strategy_order_n3.set_index('Date', inplace=True)
+
+print strategy_order_n3
 
 price = get_data([syms], pd.date_range(start_date_train, end_date_train))
-benchmark_frame = price
-benchmark_frame['Benchmark'] = np.nan
-benchmark_frame['Benchmark'].ix[0] = 100000
-
-for i in range(0, benchmark_frame.shape[0]):
-    benchmark_frame['Benchmark'].ix[i] = 100000 - 1000 * price['JPM'].ix[0] + \
-                                          1000 * price['JPM'].ix[i]
-
-del benchmark_frame['SPY']
-del benchmark_frame['JPM']
-
-#use marketsimcode to caculate the money
-manual_portvals = mk.compute_portvals(order_list_manual, start_val=100000, commission=0, impact=0.01)
-manual_portvals.fillna(method='ffill', inplace=True)
-manual_portvals.fillna(method='bfill', inplace=True)
-
-strategy_portvals = mk.compute_portvals(strategy_order_n, start_val=100000, commission=0, impact=0.01)
-strategy_portvals.fillna(method='ffill', inplace=True)
-strategy_portvals.fillna(method='bfill', inplace=True)
 
 
-final_frame = pd.concat([manual_portvals, strategy_portvals, benchmark_frame], axis=1)
-final_frame.columns = ['Manual Strategy', 'StrategyLearner','Benchmark']
 
-print final_frame
+
+strategy_portvals2 = mk.compute_portvals(strategy_order_n2, start_val=100000, commission=0, impact=0.005)
+strategy_portvals2.fillna(method='ffill', inplace=True)
+strategy_portvals2.fillna(method='bfill', inplace=True)
+
+strategy_portvals3 = mk.compute_portvals(strategy_order_n3, start_val=100000, commission=0, impact=0.05)
+strategy_portvals3.fillna(method='ffill', inplace=True)
+strategy_portvals3.fillna(method='bfill', inplace=True)
+
+final_frame = pd.concat([strategy_portvals1, strategy_portvals2, strategy_portvals3], axis=1)
+final_frame.columns = ['impact=0', 'impact=0.005','impact=0.05']
+
+
 
 final_frame.fillna(method='ffill', inplace=True)
 final_frame.fillna(method='bfill', inplace=True)
 final_frame= final_frame/final_frame.ix[0]
+print final_frame
 img= final_frame.plot( fontsize=12,
-                  title='Manual Strategy vs Benchmark (in sample)')
+                  title='Impact affect the trade')
 img.set_xlabel("Date")
 img.set_ylabel("Normalized value")
+
+
+s_daily_rets1 = (strategy_portvals1 / strategy_portvals1.shift(1)) - 1
+s_daily_rets1 = s_daily_rets1[1:]
+s_cr1 = (strategy_portvals1.ix[-1] / strategy_portvals1.ix[0]) - 1
+s_adr1 = s_daily_rets1.mean()
+s_sddr1 = s_daily_rets1.std()
+s_sr1 = np.sqrt(252) * (s_adr1) / s_sddr1
+
+print " strategy learner in sample Volatility (stdev of daily returns):", s_sddr1
+print " strategy learner in sample Average Daily Return:", s_adr1
+print " strategy learner in sample Cumulative Return:", s_cr1
+
+s_daily_rets2 = (strategy_portvals2 / strategy_portvals2.shift(1)) - 1
+s_daily_rets2 = s_daily_rets2[1:]
+s_cr2 = (strategy_portvals2.ix[-1] / strategy_portvals2.ix[0]) - 1
+s_adr2 = s_daily_rets2.mean()
+s_sddr2 = s_daily_rets2.std()
+s_sr2 = np.sqrt(252) * (s_adr2) / s_sddr2
+
+print " strategy learner in sample Volatility (stdev of daily returns):", s_sddr2
+print " strategy learner in sample Average Daily Return:", s_adr2
+print " strategy learner in sample Cumulative Return:", s_cr2
+
+
+s_daily_rets3 = (strategy_portvals3 / strategy_portvals3.shift(1)) - 1
+s_daily_rets3 = s_daily_rets3[1:]
+s_cr3 = (strategy_portvals3.ix[-1] / strategy_portvals3.ix[0]) - 1
+s_adr3 = s_daily_rets3.mean()
+s_sddr3 = s_daily_rets3.std()
+s_sr3 = np.sqrt(252) * (s_adr3) / s_sddr3
+
+print " strategy learner in sample Volatility (stdev of daily returns):", s_sddr3
+print " strategy learner in sample Average Daily Return:", s_adr3
+print " strategy learner in sample Cumulative Return:", s_cr3
+
+
 plt.show()
+
+

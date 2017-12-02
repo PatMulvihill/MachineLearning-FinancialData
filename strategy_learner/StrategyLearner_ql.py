@@ -1,6 +1,5 @@
-"""
-Template for implementing StrategyLearner  (c) 2016 Tucker Balch
-"""
+
+
 '''Author: Lu Wang lwang496'''
 
 import datetime as dt
@@ -10,13 +9,13 @@ import random
 import numpy as np
 import QLearner as ql
 
-class StrategyLearner(object):
+class StrategyLearner1(object):
 
     # constructor
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact
-        self.qlearner = ql.QLearner(num_states=3000, \
+        self.qlearner = ql.QLearner(num_states=1000, \
                                    num_actions=3, \
                                    alpha=0.2, \
                                    gamma=0.9, \
@@ -48,11 +47,11 @@ class StrategyLearner(object):
         volume_SPY = volume_all['SPY']  # only SPY, for comparison later
         if self.verbose: print volume
 
-        train_SMA = prices.rolling(window=14, min_periods=14).mean()
+        train_SMA = prices.rolling(window=21, min_periods=21).mean()
         train_SMA.fillna(method='ffill', inplace=True)
         train_SMA.fillna(method='bfill', inplace=True)
 
-        train_std = prices.rolling(window=14, min_periods=14).std()
+        train_std = prices.rolling(window=21, min_periods=21).std()
         top_band = train_SMA + (2 * train_std)
         bottom_band = train_SMA - (2 * train_std)
         train_bbp = (prices - bottom_band) / (top_band - bottom_band)
@@ -60,16 +59,16 @@ class StrategyLearner(object):
         train_SMAPrice_ratio = prices / train_SMA
 
         # caculate momentum
-        train_momentum = (prices / prices.copy().shift(14)) - 1
+        train_momentum = (prices / prices.copy().shift(21)) - 1
 
         train_daily_rets = (prices / prices.shift(1)) - 1
-        train_size = train_daily_rets.rolling(14, 14).std()
+        train_size = train_daily_rets.rolling(21, 21).std()
         train_size.fillna(method='ffill', inplace=True)
         train_size.fillna(method='bfill', inplace=True)
 
         train_SMAPrice_ratio_n, train_bbp_n, train_momentum_n, train_size_n = self.discritize(train_SMAPrice_ratio, train_bbp, train_momentum, train_size)
 
-        strategy =  train_SMAPrice_ratio_n * 100 + train_bbp_n * 10 + train_momentum_n * 10 + train_size_n
+        strategy =  train_bbp_n*100
         start = strategy.index[0]
         end = strategy.index[-1]
         dates = pd.date_range(start, end)
@@ -91,32 +90,40 @@ class StrategyLearner(object):
             action = self.qlearner.querysetstate(state)
             total_days = strategy_states.shape[0]
             prev_val = sv
-            for i in range(1, total_days):
 
+            for i in range(1, total_days):
+                # curr_price will be used to caculate impact
+                curr_price = train_array[i, 1]
+                amount = 0
                 if p == 0 and action == 1:
-                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 1000
+                    amount = 1000
+                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 1000 - self.impact*curr_price*abs(amount)
                     curr_val = train_array[i, 2] -1000 * train_array[i, 1]
                     train_array[i,0] = -1000
+
                     p = 1
                 elif p==0 and action == 2:
-
-                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000
+                    amount = 1000
+                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 1000 - self.impact*curr_price*abs(amount)
                     curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
                     train_array[i, 0] = 1000
+
                     p = 2
 
                 elif p == 1 and action == 2:
-
-                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000
+                    amount = 2000
+                    train_array[i, 2] = train_array[i - 1, 2] - train_array[i, 1] * 2000 - self.impact*curr_price*abs(amount)
                     curr_val = train_array[i, 2] + 1000 * train_array[i, 1]
                     train_array[i, 0] = 1000
+
                     p = 2
 
                 elif p == 2 and action == 1:
-
-                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000
+                    amount = 2000
+                    train_array[i, 2] = train_array[i - 1, 2] + train_array[i, 1] * 2000 - self.impact*curr_price*abs(amount)
                     curr_val = train_array[i, 2] -1000 * train_array[i, 1]
                     train_array[i, 0] = -1000
+
                     p = 1
 
                 else:
@@ -124,10 +131,7 @@ class StrategyLearner(object):
                     train_array[i, 2] = train_array[i - 1, 2]
                     curr_val = train_array[i, 2] + train_array[i, 0] * train_array[i, 1]
 
-                if prev_val == 0:
-                    reward = 0
-                else:
-                    reward = curr_val / prev_val - 1
+                reward = curr_val / prev_val - 1
                 prev_val = curr_val
                 state = strategy_states[i, 0]
                 action = self.qlearner.query(state, reward)
@@ -151,11 +155,11 @@ class StrategyLearner(object):
         trades_SPY = prices_all['SPY']  # only SPY, for comparison later
         trades.values[:, :] = 0
 
-        test_SMA = prices.rolling(window=14, min_periods=14).mean()
+        test_SMA = prices.rolling(window=21, min_periods=21).mean()
         test_SMA.fillna(method='ffill', inplace=True)
         test_SMA.fillna(method='bfill', inplace=True)
 
-        test_std = prices.rolling(window=14, min_periods=14).std()
+        test_std = prices.rolling(window=21, min_periods=21).std()
         top_band = test_SMA + (2 * test_std)
         bottom_band = test_SMA - (2 * test_std)
         test_bbp = (prices - bottom_band) / (top_band - bottom_band)
@@ -163,21 +167,21 @@ class StrategyLearner(object):
         test_SMAPrice_ratio = prices / test_SMA
 
         # caculate momentum
-        test_momentum = (prices / prices.copy().shift(14)) - 1
+        test_momentum = (prices / prices.copy().shift(21)) - 1
 
         test_daily_rets = (prices / prices.shift(1)) - 1
-        test_size = test_daily_rets.rolling(14, 14).std()
+        test_size = test_daily_rets.rolling(21, 21).std()
         test_size.fillna(method='ffill', inplace=True)
         test_size.fillna(method='bfill', inplace=True)
 
         test_SMA_ratio_n, test_bbp_n, test_momentum_n, test_size_n = self.discritize(test_SMAPrice_ratio,test_bbp,test_momentum, test_size)
 
-        test_strategy_states = (test_bbp_n * 100 + test_momentum_n * 10 + test_size_n).values
+        test_strategy_states = (test_bbp_n *100  ).values
 
         test_total_dates = test_strategy_states.size
         p = 0
         for i in range(1, test_total_dates):
-            state = test_strategy_states[ i - 1, 0] + p *1000
+            state = test_strategy_states[ i - 1, 0]
             action = self.qlearner.querysetstate(state)
             status = 0
             if p == 0 and action == 1:
@@ -204,6 +208,7 @@ class StrategyLearner(object):
 
     def discritize(self,SMA_ratio,bbp,momentum, vol ):
 
+
         SMA_ratio_n = SMA_ratio
         min1 = SMA_ratio.ix[:, 0].min()
         max1 = SMA_ratio.ix[:, 0].max()
@@ -228,21 +233,32 @@ class StrategyLearner(object):
     def author(self):
         return 'lwang496'
 
-    if __name__ == "__main__":
-        print "One does not simply think up a strategy"
 
 
 
-
-sl = StrategyLearner(False,0)
-sl.addEvidence( symbol = "IBM", \
+sl = StrategyLearner1(False,0)
+sl.addEvidence( symbol = "JPM", \
         sd=dt.datetime(2008,1,1), \
-        ed=dt.datetime(2009,1,1), \
+        ed=dt.datetime(2009,12,31), \
         sv = 10000)
 
-res= sl.testPolicy(symbol = "IBM", \
-        sd=dt.datetime(2009,1,1), \
-        ed=dt.datetime(2010,1,1), \
+res1= sl.testPolicy(symbol = "JPM", \
+                   sd=dt.datetime(2008, 1, 1), \
+                   ed=dt.datetime(2009, 12, 31), \
+                   sv = 10000)
+
+
+print res1
+
+sl = StrategyLearner1(False,0.005)
+sl.addEvidence( symbol = "JPM", \
+        sd=dt.datetime(2008,1,1), \
+        ed=dt.datetime(2009,12,31), \
         sv = 10000)
 
-print res
+res2= sl.testPolicy(symbol = "JPM", \
+                   sd=dt.datetime(2008, 1, 1), \
+                   ed=dt.datetime(2009, 12, 31), \
+                   sv = 10000)
+
+print res2

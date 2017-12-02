@@ -107,8 +107,7 @@ def test_strategy(description, insample_args, outsample_args, benchmark_type, be
             outsample_cr_to_beat = benchmark
         def timeoutwrapper_strategylearner():
             #Set fixed seed for repetability
-            np.random.seed(seed)
-            random.seed(seed)
+
             learner = StrategyLearner.StrategyLearner(verbose=False,impact=impact)
             tmp = time.time()
             learner.addEvidence(**insample_args)

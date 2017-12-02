@@ -64,7 +64,13 @@ strategy_order_list.append([end_date_train.date(), syms, 'SELL', 0])
 strategy_order_n = pd.DataFrame(np.array(strategy_order_list), columns=['Date', 'Symbol', 'Order', 'Shares'])
 strategy_order_n.set_index('Date', inplace=True)
 
-print strategy_trade
+strategy_portvals = mk.compute_portvals(strategy_order_n, start_val=100000, commission=0, impact=0)
+strategy_portvals.fillna(method='ffill', inplace=True)
+strategy_portvals.fillna(method='bfill', inplace=True)
+print "strategy portvals"
+print strategy_portvals
+
+
 print strategy_order_n
 
 order_list_manual = mn.testPolicy(symbol = "JPM", \
@@ -91,9 +97,6 @@ manual_portvals = mk.compute_portvals(order_list_manual, start_val=100000, commi
 manual_portvals.fillna(method='ffill', inplace=True)
 manual_portvals.fillna(method='bfill', inplace=True)
 
-strategy_portvals = mk.compute_portvals(strategy_order_n, start_val=100000, commission=0, impact=0)
-strategy_portvals.fillna(method='ffill', inplace=True)
-strategy_portvals.fillna(method='bfill', inplace=True)
 
 
 final_frame = pd.concat([manual_portvals, strategy_portvals, benchmark_frame], axis=1)
