@@ -1,4 +1,4 @@
-
+"""Author: Lu Wang, lwang496, lwang496@gatech.edu"""
 
 import pandas as pd
 import numpy as np
@@ -6,6 +6,7 @@ import datetime as dt
 import os
 from util import get_data, plot_data
 
+# Author: Lu Wang lwang496
 
 def compute_portvals(file1, start_val=1000000, commission=9.95, impact=0.005):
     # this is the function the autograder will call to test your code

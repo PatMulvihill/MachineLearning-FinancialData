@@ -1,3 +1,5 @@
+"""Author: Lu Wang, lwang496, lwang496@gatech.edu"""
+
 import os
 import pandas as pd
 import numpy as np
@@ -10,6 +12,8 @@ start_date_train = dt.datetime(2008,1,01)
 end_date_train = dt.datetime(2009,12,31)
 start_date_test = dt.datetime(2010,1,01)
 end_date_test = dt.datetime(2011,12,31)
+
+# Author: Lu Wang lwang496
 
 def author():
     return 'lwang496'

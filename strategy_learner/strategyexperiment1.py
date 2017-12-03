@@ -1,6 +1,6 @@
 
 
-'''Author: Lu Wang lwang496'''
+"""Author: Lu Wang, lwang496, lwang496@gatech.edu"""
 
 import datetime as dt
 import pandas as pd
@@ -9,9 +9,11 @@ import random
 import numpy as np
 import QLearner as ql
 
+# Author: Lu Wang lwang496
 class StrategyLearner1(object):
 
     # constructor
+    # Author: Lu Wang lwang496
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact

@@ -1,4 +1,4 @@
-'''Author: Lu Wang lwang496'''
+"""Author: Lu Wang, lwang496, lwang496@gatech.edu"""
 
 import numpy as np
 import pandas as pd
@@ -15,7 +15,9 @@ import marketsimcode as mk
 """
 Template for implementing StrategyLearner  (c) 2016 Tucker Balch
 """
-'''Author: Lu Wang lwang496'''
+
+
+# Author: Lu Wang lwang496
 
 import datetime as dt
 import pandas as pd
@@ -68,7 +70,7 @@ strategy_portvals1 = mk.compute_portvals(strategy_order_n, start_val=100000, com
 strategy_portvals1.fillna(method='ffill', inplace=True)
 strategy_portvals1.fillna(method='bfill', inplace=True)
 print "strategy portvals"
-print strategy_portvals1
+print strategy_order_n
 
 
 seed = 141109000
@@ -136,7 +138,6 @@ strategy_order_list.append([end_date_train.date(), syms, 'SELL', 0])
 strategy_order_n3 = pd.DataFrame(np.array(strategy_order_list), columns=['Date', 'Symbol', 'Order', 'Shares'])
 strategy_order_n3.set_index('Date', inplace=True)
 
-print strategy_order_n3
 
 price = get_data([syms], pd.date_range(start_date_train, end_date_train))
 

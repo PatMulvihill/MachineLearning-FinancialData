@@ -1,7 +1,7 @@
 """
 Template for implementing StrategyLearner  (c) 2016 Tucker Balch
 """
-'''Author: Lu Wang lwang496'''
+"""Author: Lu Wang, lwang496, lwang496@gatech.edu"""
 
 import datetime as dt
 import pandas as pd
@@ -13,6 +13,7 @@ import QLearner as ql
 class StrategyLearner(object):
 
     # constructor
+    # Author: Lu Wang lwang496
     def __init__(self, verbose = False, impact=0.0):
         self.verbose = verbose
         self.impact = impact

@@ -1,10 +1,11 @@
 """
 Template for implementing QLearner  (c) 2015 Tucker Balch
 """
+"""Author: Lu Wang, lwang496, lwang496@gatech.edu"""
 
 import numpy as np
 
-
+# Author: Lu Wang lwang496
 class QLearner(object):
 
     def __init__(self, \

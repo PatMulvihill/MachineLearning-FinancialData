@@ -1,4 +1,4 @@
-'''Author: Lu Wang lwang496'''
+"""Author: Lu Wang, lwang496, lwang496@gatech.edu"""
 
 import numpy as np
 import pandas as pd
@@ -25,7 +25,7 @@ import numpy as np
 import QLearner as ql
 import strategyexperiment1 as sl
 
-
+# Author: Lu Wang lwang496
 seed = 141109000
 np.random.seed(seed)
 random.seed(seed)
