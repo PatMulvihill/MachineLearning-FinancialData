@@ -52,4 +52,3 @@ def compute_portvals(file1, start_val=1000000, commission=9.95, impact=0.005):
 def author():
     return 'lwang496'
 
-

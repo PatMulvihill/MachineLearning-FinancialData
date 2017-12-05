@@ -235,4 +235,3 @@ class StrategyLearner1(object):
     def author(self):
         return 'lwang496'
 
-

@@ -63,4 +63,3 @@ def caculate( symbols, sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,12,31)):
 
 
     return sma, sma_n, bbp, top_band, bottom_band, momentum
-

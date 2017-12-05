@@ -204,4 +204,3 @@ print " strategy learner in sample Cumulative Return:", s_cr3
 
 plt.show()
 
-
