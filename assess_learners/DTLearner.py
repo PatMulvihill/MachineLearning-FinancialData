@@ -7,8 +7,7 @@ class DTLearner(object):
         self.verbose = verbose
         self.tree = np.array([])
 
-    def author(self):
-        return 'lwang496'
+    
 
     def addEvidence(self, Xtrain, Ytrain):
         self.tree = self.build_tree(Xtrain, Ytrain)

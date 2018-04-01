@@ -1,4 +1,1 @@
-# ML4T_2017Fall
-Course website: http://quantsoftware.gatech.edu/CS7646_Fall_2017
-
-Information on cloning this repository and using the autograder on buffet0x servers: http://quantsoftware.gatech.edu/ML4T_Software_Setup
+This project focus on machine learning based trading strategies including the algorithmic steps from information gathering to market orders. The focus is on how to apply probabilistic machine learning approaches to trading decisions: consider statistical approaches like linear regression, Q-Learning, KNN and regression trees and how to apply them to actual stock trading situations.

@@ -13,8 +13,7 @@ class BagLearner(object):
         self.Xbags = []
         self.Ybags = []
 
-    def author(self):
-        return 'lwang496'
+   
 
     def addEvidence(self,Xtrain,Ytrain):
         # Randomly select the set of data
